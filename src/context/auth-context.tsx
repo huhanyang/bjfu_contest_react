@@ -6,12 +6,7 @@ import { useAsync } from "utils/use-async";
 import { FullPageErrorFallback, FullPageLoading } from "components/lib";
 import { User } from "types/user";
 import { useQueryClient } from "react-query";
-import {
-  localStorageKey,
-  RegisterForm,
-  LoginForm,
-  ActivateForm,
-} from "auth-provider";
+import { localStorageKey, LoginForm, ActivateForm } from "auth-provider";
 
 const bootstrapUser = async () => {
   let user = null;
@@ -28,7 +23,6 @@ const bootstrapUser = async () => {
 const AuthContext = React.createContext<
   | {
       user: User | null;
-      register: (form: RegisterForm) => Promise<void>;
       login: (form: LoginForm) => Promise<void>;
       activate: (form: ActivateForm) => Promise<void>;
       logout: () => Promise<void>;
@@ -51,7 +45,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // point free
   const login = (form: LoginForm) => auth.login(form).then(setUser);
-  const register = (form: RegisterForm) => auth.register(form).then(setUser);
   const activate = (form: ActivateForm) => auth.activate(form).then(setUser);
   const logout = () =>
     auth.logout().then(() => {
@@ -74,7 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AuthContext.Provider
       children={children}
-      value={{ user, login, register, activate, logout }}
+      value={{ user, login, activate, logout }}
     />
   );
 };

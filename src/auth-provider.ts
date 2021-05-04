@@ -35,35 +35,6 @@ export const login = (data: LoginForm) => {
   });
 };
 
-export interface RegisterForm {
-  account: string;
-  email: string;
-  password: string;
-  type: "TEACHER" | "STUDENT";
-  status: string;
-  name: string;
-  gender?: "MALE" | "FEMALE" | "SECRECY";
-  college: string;
-  major?: string;
-  introduction?: string;
-}
-
-export const register = (data: RegisterForm) => {
-  return fetch(`${apiUrl}/user/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  }).then(async (response) => {
-    if (response.ok) {
-      return handleUserResponse(await response.json());
-    } else {
-      return Promise.reject(await response.json());
-    }
-  });
-};
-
 export interface ActivateForm {
   token: string;
 }

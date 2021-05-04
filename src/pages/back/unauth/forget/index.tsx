@@ -1,42 +1,29 @@
 import React from "react";
-import { Form, Input } from "antd";
-import { useAsync } from "utils/use-async";
-import { LongButton } from "../UnAuthenticatedBackApp";
-import { useHttp } from "../../../../utils/http";
+import { Divider } from "antd";
+import { CardTitle } from "../UnAuthenticatedBackApp";
+import { Navigate, Route, Routes } from "react-router";
+import { Link } from "react-router-dom";
+import { ForgetSuccess } from "./success";
+import { ForgetSubmit } from "./submit";
+import { ForgetResetPassword } from "./resetPassword";
 
-export const Forget = ({ onError }: { onError: (error: Error) => void }) => {
-  const client = useHttp();
-  const { run, isLoading } = useAsync(undefined, { throwOnError: true });
-
-  // HTMLFormElement extends Element
-  const handleSubmit = async (values: { email: string }) => {
-    try {
-      await run(
-        client("user/forgetPassword", { data: values, method: "POST" })
-      ).then(() => {});
-    } catch (e) {
-      onError(e);
-    }
-  };
-
+export const Forget = () => {
   return (
-    <Form onFinish={handleSubmit}>
-      <Form.Item
-        name={"email"}
-        label={"邮箱"}
-        tooltip="用于接收找回密码的验证码"
-        rules={[
-          { required: true, message: "请输入邮箱" },
-          { type: "email", message: "请输入合法的邮箱" },
-        ]}
-      >
-        <Input placeholder={"注册时的邮箱"} type={"email"} maxLength={32} />
-      </Form.Item>
-      <Form.Item>
-        <LongButton loading={isLoading} htmlType={"submit"} type={"primary"}>
-          发送验证邮件
-        </LongButton>
-      </Form.Item>
-    </Form>
+    <>
+      <CardTitle>找回密码</CardTitle>
+      <Routes>
+        <Route path={"/submit"} element={<ForgetSubmit />} />
+        <Route path={"/success"} element={<ForgetSuccess />} />
+        <Route path={"/resetPassword"} element={<ForgetResetPassword />} />
+        <Navigate to={"submit"} />
+      </Routes>
+      <Divider />
+      <Link style={{ float: "left" }} to={"../login"}>
+        去登录
+      </Link>
+      <Link style={{ float: "right" }} to={"../register"}>
+        去注册
+      </Link>
+    </>
   );
 };
