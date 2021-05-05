@@ -55,5 +55,19 @@ export const activate = (data: ActivateForm) => {
   });
 };
 
+export const refresh = () => {
+  return fetch(`${apiUrl}/user/me`, {
+    headers: {
+      Authorization: getToken() ? `Bearer ${getToken()}` : "",
+    },
+  }).then(async (response) => {
+    if (response.ok) {
+      return handleUserResponse(await response.json());
+    } else {
+      return Promise.reject(await response.json());
+    }
+  });
+};
+
 export const logout = async () =>
   window.localStorage.removeItem(localStorageKey);

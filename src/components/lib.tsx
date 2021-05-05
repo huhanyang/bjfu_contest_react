@@ -9,10 +9,23 @@ const FullPage = styled.div`
   align-items: center;
 `;
 
+const Page = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const FullPageLoading = () => (
   <FullPage>
     <Spin size={"large"} />
   </FullPage>
+);
+
+export const PageLoading = () => (
+  <Page>
+    <Spin size={"large"} />
+  </Page>
 );
 
 export const FullPageErrorFallback = ({ error }: { error: Error | null }) => (

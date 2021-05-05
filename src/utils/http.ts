@@ -39,8 +39,10 @@ export const http = async (
         return Promise.reject({ message: "请重新登录" });
       }
       const data = await response.json();
-      if (response.ok) {
-        return data;
+      if (response.ok && data.code === 100) {
+        return data.object;
+      } else if (response.ok) {
+        return Promise.reject(data);
       } else {
         return Promise.reject(data);
       }
@@ -60,40 +62,4 @@ export const useHttp = () => {
       http(endpoint, { ...config, token: user?.token }),
     [user?.token]
   );
-};
-
-// 类型别名、Utility Type 讲解
-// 联合类型
-let myFavoriteNumber: string | number;
-myFavoriteNumber = "seven";
-myFavoriteNumber = 7;
-// TS2322: Type '{}' is not assignable to type 'string | number'.
-// myFavoriteNumber = {}
-let jackFavoriteNumber: string | number;
-
-// 类型别名在很多情况下可以和interface互换
-// interface Person {
-//   name: string
-// }
-// type Person = { name: string }
-// const xiaoMing: Person = {name: 'xiaoming'}
-
-// 类型别名, interface 在这种情况下没法替代type
-type FavoriteNumber = string | number;
-let roseFavoriteNumber: FavoriteNumber = "6";
-
-// interface 也没法实现Utility type
-type Person = {
-  name: string;
-  age: number;
-};
-const xiaoMing: Partial<Person> = {};
-const shenMiRen: Omit<Person, "name" | "age"> = {};
-type PersonKeys = keyof Person;
-type PersonOnlyName = Pick<Person, "name" | "age">;
-type Age = Exclude<PersonKeys, "name">;
-
-// Partial 的实现
-type Partial<T> = {
-  [P in keyof T]?: T[P];
 };

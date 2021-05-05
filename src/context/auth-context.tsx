@@ -13,8 +13,7 @@ const bootstrapUser = async () => {
   const token = auth.getToken();
   if (token) {
     // 刷新token
-    const data = await http("user/getUserInfo", { token });
-    user = data.object;
+    user = await http("user/me", { token });
     window.localStorage.setItem(localStorageKey, user.token || "");
   }
   return user;
@@ -25,6 +24,7 @@ const AuthContext = React.createContext<
       user: User | null;
       login: (form: LoginForm) => Promise<void>;
       activate: (form: ActivateForm) => Promise<void>;
+      refresh: () => Promise<void>;
       logout: () => Promise<void>;
     }
   | undefined
@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // point free
   const login = (form: LoginForm) => auth.login(form).then(setUser);
+  const refresh = () => auth.refresh().then(setUser);
   const activate = (form: ActivateForm) => auth.activate(form).then(setUser);
   const logout = () =>
     auth.logout().then(() => {
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AuthContext.Provider
       children={children}
-      value={{ user, login, activate, logout }}
+      value={{ user, login, activate, logout, refresh }}
     />
   );
 };
