@@ -5,6 +5,7 @@ import {
   useConfig,
   useDeleteConfig,
   useEditConfig,
+  useEditSingleConfig,
   useNoOpsConfig,
 } from "utils/use-optimistic-options";
 import { User } from "../types/user";
@@ -65,6 +66,6 @@ export const useEditSelfInfo = (id?: number) => {
         method: "post",
         data: params,
       }),
-    useNoOpsConfig(["user", { id }])
+    useEditSingleConfig(["user", { id }])
   );
 };

@@ -25,6 +25,8 @@ export const http = async (
 
   if (config.method.toUpperCase() === "GET") {
     endpoint += `?${qs.stringify(data)}`;
+  } else if (config.method.toUpperCase() === "DELETE") {
+    endpoint += `?${qs.stringify(data)}`;
   } else {
     config.body = JSON.stringify(data || {});
   }

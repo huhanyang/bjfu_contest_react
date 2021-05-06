@@ -10,6 +10,10 @@ export const useConfig = (
     async onMutate(target: any) {
       const previousItems = queryClient.getQueryData(queryKey);
       queryClient.setQueryData(queryKey, (old?: any[]) => {
+        console.log(queryKey);
+        console.log(old);
+        console.log(target);
+        console.log(callback(target, old));
         return callback(target, old);
       });
       return { previousItems };
@@ -33,8 +37,12 @@ export const useEditConfig = (queryKey: QueryKey) =>
         item.id === target.id ? { ...item, ...target } : item
       ) || []
   );
+export const useEditSingleConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => {
+    return { ...old, ...target };
+  });
 export const useAddConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => (old ? [...old, target] : []));
 
 export const useNoOpsConfig = (queryKey: QueryKey) =>
-  useConfig(queryKey, (target, old) => target);
+  useConfig(queryKey, (target, old) => (target ? target : old));
