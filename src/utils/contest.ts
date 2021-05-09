@@ -9,15 +9,23 @@ import {
   useNoOpsConfig,
 } from "utils/use-optimistic-options";
 import { User } from "../types/user";
-import { ChangeUserInfo } from "./user";
+import { PageAndSingleFieldSorterRequest } from "../types/Request";
 
-interface Contest {
+type ContestStatus =
+  | "CREATING"
+  | "REGISTERING"
+  | "RUNNING"
+  | "FINISH"
+  | "DELETE";
+
+export interface Contest {
   id: number;
   name: string;
   summary: string;
   description: string;
   creator: User;
-  status: "CREATING" | "REGISTERING" | "RUNNING" | "FINISH" | "DELETE";
+  createdTime: string;
+  status: ContestStatus;
   groupMemberCount: number;
   extension: string;
 }
@@ -35,6 +43,37 @@ export const useContest = (id?: number) => {
     {
       enabled: Boolean(id),
     }
+  );
+};
+
+export interface ContestListCreatedRequest
+  extends PageAndSingleFieldSorterRequest {
+  name?: string[];
+  status?: ContestStatus[];
+}
+
+export const useCreatedContests = (params: ContestListCreatedRequest) => {
+  const client = useHttp();
+  return useQuery<Contest[]>(["created-contests", params], () =>
+    client("contest/listCreated", { data: params, method: "POST" }).then(
+      (value) => value.content
+    )
+  );
+};
+
+export interface ContestListAllRequest extends PageAndSingleFieldSorterRequest {
+  name?: string[];
+  status?: ContestStatus[];
+  creatorName?: string[];
+  creatorCollege?: string[];
+}
+
+export const useAllContests = (params: ContestListAllRequest) => {
+  const client = useHttp();
+  return useQuery<Contest[]>(["all-contests", params], () =>
+    client("contest/listAll", { data: params, method: "POST" }).then(
+      (value) => value.content
+    )
   );
 };
 

@@ -65,7 +65,7 @@ export const ContestCreate = () => {
       </Form.Item>
       <Form.Item>
         <LongButton loading={isLoading} htmlType={"submit"} type={"primary"}>
-          提交修改
+          创建竞赛
         </LongButton>
       </Form.Item>
     </Form>

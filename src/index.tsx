@@ -4,12 +4,16 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "antd/dist/antd.less";
 import { AppProviders } from "context";
+import { ConfigProvider } from "antd";
+import zhCN from "antd/lib/locale/zh_CN";
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppProviders>
-      <App />
-    </AppProviders>
+    <ConfigProvider locale={zhCN}>
+      <AppProviders>
+        <App />
+      </AppProviders>
+    </ConfigProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

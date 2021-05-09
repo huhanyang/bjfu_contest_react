@@ -40,8 +40,12 @@ export const TeacherSider = ({
           <Menu.Item key="1">
             <Link to={"/back/contest/create"}>竞赛创建</Link>
           </Menu.Item>
-          <Menu.Item key="2">option2</Menu.Item>
-          <Menu.Item key="3">option3</Menu.Item>
+          <Menu.Item key="2">
+            <Link to={"/back/contest/listCreated"}>管理竞赛</Link>
+          </Menu.Item>
+          <Menu.Item key="3">
+            <Link to={"/back/contest/listAll"}>查看竞赛</Link>
+          </Menu.Item>
           <Menu.Item key="4">option4</Menu.Item>
         </SubMenu>
         <SubMenu key="sub2" icon={<LaptopOutlined />} title="subnav 2">

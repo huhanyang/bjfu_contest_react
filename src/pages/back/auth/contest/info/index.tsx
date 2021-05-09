@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { generatePath, useNavigate, useParams } from "react-router";
+import { Button, Descriptions, message, Popconfirm } from "antd";
 import { useAuth } from "../../../../../context/auth-context";
 import { useContest } from "../../../../../utils/contest";
 import { PageLoading } from "../../../../../components/lib";
-import { Button, Descriptions, message, Popconfirm } from "antd";
-import { Link } from "react-router-dom";
 import { ContestEditInfoModal } from "./ContestEditInfoModal";
 import { useHttp } from "../../../../../utils/http";
 import { useAsync } from "../../../../../utils/use-async";
