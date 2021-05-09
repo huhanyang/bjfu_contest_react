@@ -7,7 +7,7 @@ import {
 import { Form, Input, message, Modal, Radio } from "antd";
 import { LongButton } from "../../../unauth/UnAuthenticatedBackApp";
 
-export const ContestEditInfoModal = ({
+export const ContestEditModal = ({
   visible,
   setVisible,
   contestId,

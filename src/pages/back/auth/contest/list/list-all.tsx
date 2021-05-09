@@ -120,7 +120,6 @@ export const ListAll = () => {
     </Popover>
   );
 
-  // todo isLoadind
   return (
     <>
       <Table<Contest>
