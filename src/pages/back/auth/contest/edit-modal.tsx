@@ -2,7 +2,7 @@ import React from "react";
 import {
   ContestEditRequest,
   useContest,
-  useEditContestInfo,
+  useEditContest,
 } from "../../../../utils/contest";
 import { Form, Input, InputNumber, message, Modal, Select } from "antd";
 import { LongButton } from "../../unauth";
@@ -17,11 +17,11 @@ export const ContestEditModal = ({
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { data: contest, isLoading } = useContest(Number(contestId));
-  const { mutateAsync: editContestInfo } = useEditContestInfo(contestId);
+  const { mutateAsync: editContestInfo } = useEditContest(contestId);
 
   const handleSubmit = async (values: ContestEditRequest) => {
     try {
-      await editContestInfo({ ...values, contestId: contestId });
+      await editContestInfo({ ...values });
       // 关闭Modal
       setVisible(false);
     } catch (e) {

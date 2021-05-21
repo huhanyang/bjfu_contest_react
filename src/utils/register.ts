@@ -1,12 +1,6 @@
 import { useHttp } from "utils/http";
 import { useMutation, useQuery } from "react-query";
-import {
-  useAddConfig,
-  useDeleteConfig,
-  useEditConfig,
-  useNoOpsConfig,
-} from "utils/use-optimistic-options";
-import { User } from "../types/user";
+import { useNoOpsConfig } from "utils/use-optimistic-options";
 import { PageAndSingleFieldSorterRequest } from "../types/request";
 import { cleanObject } from "./index";
 import {
@@ -17,7 +11,7 @@ import {
 export const useRegister = (contestId: number) => {
   const client = useHttp();
   return useQuery<ContestRegister>(
-    ["register", contestId],
+    ["register", "info", { contestId }],
     () => client(`contest/register/getInfo`, { data: { contestId } }),
     { enabled: Boolean(contestId) }
   );
@@ -36,7 +30,7 @@ export interface RegisterListAllRequest
 export const useAllRegisters = (params: Partial<RegisterListAllRequest>) => {
   const client = useHttp();
   return useQuery<ContestRegister[]>(
-    ["all-registers", cleanObject(params)],
+    ["register", "all-registers", cleanObject(params)],
     () =>
       client(`contest/register/listAll`, {
         data: params,
@@ -56,7 +50,7 @@ export const useCreateRegister = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useAddConfig(["all-registers", { contestId }])
+    useNoOpsConfig(["register"])
   );
 };
 
@@ -68,7 +62,7 @@ export const useDeleteRegister = (contestId?: number) => {
         method: "DELETE",
         data: params,
       }),
-    useDeleteConfig(["all-registers", { contestId }])
+    useNoOpsConfig(["register"])
   );
 };
 
@@ -80,7 +74,7 @@ export const useBanRegister = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useEditConfig(["all-registers", { contestId }])
+    useNoOpsConfig(["register"])
   );
 };
 
@@ -92,14 +86,15 @@ export const useUnBanRegister = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useEditConfig(["all-registers", { contestId }])
+    useNoOpsConfig(["register"])
   );
 };
 
 export const useAllRegisteredContests = () => {
   const client = useHttp();
-  return useQuery<ContestRegister[]>(["all-registered-contests"], () =>
-    client(`contest/register/listAllRegistered`)
+  return useQuery<ContestRegister[]>(
+    ["register", "all-registered-contests"],
+    () => client(`contest/register/listAllRegistered`)
   );
 };
 
@@ -111,6 +106,6 @@ export const useDeleteRegisteredContest = () => {
         method: "DELETE",
         data: params,
       }),
-    useNoOpsConfig(["all-registered-contests"])
+    useNoOpsConfig(["register"])
   );
 };

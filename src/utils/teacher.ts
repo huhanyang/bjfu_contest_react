@@ -8,7 +8,7 @@ import { Contest, ContestStatus } from "../types/contest";
 export const useAllTeachers = (contestId: number) => {
   const client = useHttp();
   return useQuery<User[]>(
-    ["all-teachers", contestId],
+    ["teacher", "all-teachers", contestId],
     () =>
       client(`contest/teacher/listAll`, {
         data: { contestId },
@@ -35,7 +35,7 @@ export const useCreateTeacher = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["all-teachers", contestId])
+    useNoOpsConfig(["teacher"])
   );
 };
 
@@ -47,13 +47,13 @@ export const useDeleteTeacher = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["all-teachers", contestId])
+    useNoOpsConfig(["teacher"])
   );
 };
 
 export const useAllTeachContests = (params?: TeacherListAllTeachContest) => {
   const client = useHttp();
-  return useQuery<Contest[]>(["all-teach-contests", params], () =>
+  return useQuery<Contest[]>(["teacher", "all-teach-contests", params], () =>
     client(`contest/teacher/listAllTeachContests`, {
       data: params,
       method: "post",
@@ -69,6 +69,6 @@ export const useDeleteTeachContest = () => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["all-teach-contests"])
+    useNoOpsConfig(["teacher"])
   );
 };

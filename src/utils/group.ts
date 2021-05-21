@@ -1,19 +1,12 @@
 import { useHttp } from "utils/http";
-import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  useAddConfig,
-  useDeleteConfig,
-  useEditConfig,
-  useEditSingleConfig,
-  useNoOpsConfig,
-} from "utils/use-optimistic-options";
-import { User } from "../types/user";
+import { useMutation, useQuery } from "react-query";
+import { useNoOpsConfig } from "utils/use-optimistic-options";
 import { Group } from "../types/group";
 
 export const useGroup = (groupId?: number) => {
   const client = useHttp();
   return useQuery<Group>(
-    ["group", { groupId }],
+    ["group", "info", { groupId }],
     () => client(`contest/group/getInfo`, { data: { groupId } }),
     {
       enabled: Boolean(groupId),
@@ -24,7 +17,7 @@ export const useGroup = (groupId?: number) => {
 export const useAllGroupsByContest = (contestId?: number) => {
   const client = useHttp();
   return useQuery<Group[]>(
-    ["all-groups-by-contest", { contestId }],
+    ["group", "all-groups-by-contest", { contestId }],
     () =>
       client(`contest/group/listAllByContest`, {
         data: {
@@ -39,7 +32,7 @@ export const useAllGroupsByContest = (contestId?: number) => {
 
 export const useAllGroupsByMember = () => {
   const client = useHttp();
-  return useQuery<Group[]>(["all-groups-by-member"], () =>
+  return useQuery<Group[]>(["group", "all-groups-by-member"], () =>
     client(`contest/group/listAllByMember`)
   );
 };
@@ -58,7 +51,7 @@ export const useCreateGroup = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useAddConfig(["all-groups-by-contest", { contestId }])
+    useNoOpsConfig(["group", "all-groups-by-contest", { contestId }])
   );
 };
 
@@ -74,9 +67,9 @@ export const useEditGroup = (contestId?: number) => {
     (params: Partial<GroupEditRequest>) =>
       client(`contest/group/edit`, {
         method: "POST",
-        data: params,
+        data: { ...params, contestId },
       }),
-    useEditConfig(["all-groups-by-contest", { contestId }])
+    useNoOpsConfig(["group"])
   );
 };
 
@@ -86,8 +79,8 @@ export const useDeleteGroup = (contestId?: number) => {
     (params: { groupId: number }) =>
       client(`contest/group/delete`, {
         method: "DELETE",
-        data: params,
+        data: { ...params, contestId },
       }),
-    useDeleteConfig(["all-groups-by-contest", { contestId }])
+    useNoOpsConfig(["group"])
   );
 };

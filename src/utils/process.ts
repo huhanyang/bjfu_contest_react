@@ -1,12 +1,6 @@
 import { useHttp } from "utils/http";
-import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  useAddConfig,
-  useDeleteConfig,
-  useEditConfig,
-  useEditSingleConfig,
-  useNoOpsConfig,
-} from "utils/use-optimistic-options";
+import { useMutation, useQuery } from "react-query";
+import { useNoOpsConfig } from "utils/use-optimistic-options";
 import { Process } from "../types/process";
 import { Group } from "../types/group";
 

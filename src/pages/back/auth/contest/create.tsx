@@ -2,29 +2,22 @@ import { Checkbox, Form, Input, message } from "antd";
 import { LongButton } from "../../unauth";
 import React from "react";
 import { useNavigate } from "react-router";
-import { useHttp } from "../../../../utils/http";
-import { useAsync } from "../../../../utils/use-async";
+import {
+  ContestCreateRequest,
+  useCreateContest,
+} from "../../../../utils/contest";
 
 export const ContestCreate = () => {
-  interface ContestCreateForm {
-    name: string;
-    summary: string;
-    description: string;
-    groupMemberCount: number;
-    isCreateDefaultProcess: boolean;
-  }
-
   const navigate = useNavigate();
-  const client = useHttp();
-  const { run, isLoading } = useAsync(undefined, { throwOnError: true });
+  const {
+    mutateAsync: createContest,
+    isLoading: isCreateContestLoading,
+  } = useCreateContest();
 
-  const handleSubmit = async (values: ContestCreateForm) => {
+  const handleSubmit = async (values: ContestCreateRequest) => {
     try {
-      await run(
-        client("contest/create", { data: values, method: "POST" })
-      ).then((contest) => {
-        navigate(`../contestInfo/${contest.id}`, { replace: true });
-        // todo 创建成功后跳转
+      await createContest(values).then((contest) => {
+        navigate(`../info/${contest.id}`, { replace: true });
       });
     } catch (e) {
       message.error(e.message);
@@ -68,15 +61,15 @@ export const ContestCreate = () => {
       >
         <Input type={"number"} min={1} max={10} />
       </Form.Item>
-      <Form.Item
-        name={"isCreateDefaultProcess"}
-        label={"创建默认报名流程"}
-        valuePropName="checked"
-      >
+      <Form.Item name={"isCreateDefaultProcess"} valuePropName="checked">
         <Checkbox>创建默认报名流程</Checkbox>
       </Form.Item>
       <Form.Item>
-        <LongButton loading={isLoading} htmlType={"submit"} type={"primary"}>
+        <LongButton
+          loading={isCreateContestLoading}
+          htmlType={"submit"}
+          type={"primary"}
+        >
           创建竞赛
         </LongButton>
       </Form.Item>

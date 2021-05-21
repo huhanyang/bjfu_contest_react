@@ -1,19 +1,12 @@
 import { useHttp } from "utils/http";
-import { QueryKey, useMutation, useQuery } from "react-query";
-import {
-  useAddConfig,
-  useConfig,
-  useDeleteConfig,
-  useEditConfig,
-  useEditSingleConfig,
-  useNoOpsConfig,
-} from "utils/use-optimistic-options";
+import { useMutation, useQuery } from "react-query";
+import { useNoOpsConfig } from "utils/use-optimistic-options";
 import { User, UserGender, UserStatus, UserType } from "../types/user";
 
 export const useUser = (id?: number) => {
   const client = useHttp();
   return useQuery<User>(
-    ["user", { id }],
+    ["user", "info", { id }],
     () =>
       client(`user/getUserInfo`, {
         data: {
@@ -48,7 +41,7 @@ export const useEditUserInfo = (id?: number) => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["user", { id }])
+    useNoOpsConfig(["user"])
   );
 };
 
@@ -66,14 +59,14 @@ export const useEditSelfInfo = (id?: number) => {
         method: "post",
         data: params,
       }),
-    useEditSingleConfig(["user", { id }])
+    useNoOpsConfig(["user"])
   );
 };
 
 export const useSearchUser = (name?: string, types?: UserType[]) => {
   const client = useHttp();
   return useQuery<User[]>(
-    ["user", { name, types }],
+    ["user", "search", { name, types }],
     () =>
       client(`user/search`, {
         data: {

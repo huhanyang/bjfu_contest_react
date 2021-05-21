@@ -215,6 +215,7 @@ export const ProcessInfo = () => {
         setVisible={setProcessEditModalVisible}
       />
       <ProcessPromoteGroups
+        contestId={Number(contestId)}
         processId={Number(processId)}
         visible={promoteGroupsModalVisible}
         setVisible={setPromoteGroupsModalVisible}

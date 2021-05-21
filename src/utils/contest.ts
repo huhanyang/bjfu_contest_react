@@ -1,21 +1,13 @@
 import { useHttp } from "utils/http";
-import { QueryKey, useMutation, useQuery } from "react-query";
-import {
-  useAddConfig,
-  useConfig,
-  useDeleteConfig,
-  useEditConfig,
-  useEditSingleConfig,
-  useNoOpsConfig,
-} from "utils/use-optimistic-options";
-import { User } from "../types/user";
+import { useMutation, useQuery } from "react-query";
+import { useNoOpsConfig } from "utils/use-optimistic-options";
 import { PageAndSingleFieldSorterRequest } from "../types/request";
 import { Contest, ContestStatus } from "../types/contest";
 
 export const useContest = (id?: number) => {
   const client = useHttp();
   return useQuery<Contest>(
-    ["contest", { id }],
+    ["contest", "info", { id }],
     () =>
       client(`contest/getInfo`, {
         data: {
@@ -36,7 +28,7 @@ export interface ContestListCreatedRequest
 
 export const useCreatedContests = (params: ContestListCreatedRequest) => {
   const client = useHttp();
-  return useQuery<Contest[]>(["created-contests", params], () =>
+  return useQuery<Contest[]>(["contest", "created-contests", params], () =>
     client("contest/listCreated", { data: params, method: "POST" }).then(
       (value) => value.content
     )
@@ -52,7 +44,7 @@ export interface ContestListAllRequest extends PageAndSingleFieldSorterRequest {
 
 export const useAllContests = (params: ContestListAllRequest) => {
   const client = useHttp();
-  return useQuery<Contest[]>(["all-contests", params], () =>
+  return useQuery<Contest[]>(["contest", "all-contests", params], () =>
     client("contest/listAll", { data: params, method: "POST" }).then(
       (value) => value.content
     )
@@ -67,14 +59,34 @@ export interface ContestEditRequest {
   groupMemberCount: number;
 }
 
-export const useEditContestInfo = (id?: number) => {
+export const useEditContest = (contestId?: number) => {
   const client = useHttp();
   return useMutation(
     (params: Partial<ContestEditRequest>) =>
       client(`contest/edit`, {
         method: "POST",
+        data: { ...params, contestId: contestId },
+      }),
+    useNoOpsConfig(["contest"])
+  );
+};
+
+export interface ContestCreateRequest {
+  name: string;
+  summary: string;
+  description: string;
+  groupMemberCount: number;
+  isCreateDefaultProcess: boolean;
+}
+
+export const useCreateContest = () => {
+  const client = useHttp();
+  return useMutation(
+    (params: Partial<ContestCreateRequest>) =>
+      client(`contest/create`, {
+        method: "POST",
         data: params,
       }),
-    useEditSingleConfig(["contest", { id }])
+    useNoOpsConfig(["contest"])
   );
 };
