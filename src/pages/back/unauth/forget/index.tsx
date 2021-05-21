@@ -1,11 +1,11 @@
 import React from "react";
 import { Divider } from "antd";
-import { CardTitle } from "../UnAuthenticatedBackApp";
+import { CardTitle } from "../index";
 import { Navigate, Route, Routes } from "react-router";
 import { Link } from "react-router-dom";
 import { ForgetSuccess } from "./success";
 import { ForgetSubmit } from "./submit";
-import { ForgetResetPassword } from "./resetPassword";
+import { ForgetResetPassword } from "./reset-password";
 
 export const Forget = () => {
   return (

@@ -1,5 +1,5 @@
-import { Form, Input, message, Radio } from "antd";
-import { LongButton } from "../../unauth/UnAuthenticatedBackApp";
+import { Checkbox, Form, Input, message } from "antd";
+import { LongButton } from "../../unauth";
 import React from "react";
 import { useNavigate } from "react-router";
 import { useHttp } from "../../../../utils/http";
@@ -11,6 +11,7 @@ export const ContestCreate = () => {
     summary: string;
     description: string;
     groupMemberCount: number;
+    isCreateDefaultProcess: boolean;
   }
 
   const navigate = useNavigate();
@@ -31,7 +32,11 @@ export const ContestCreate = () => {
   };
 
   return (
-    <Form onFinish={handleSubmit} scrollToFirstError>
+    <Form
+      onFinish={handleSubmit}
+      scrollToFirstError
+      initialValues={{ isCreateDefaultProcess: true }}
+    >
       <Form.Item
         name={"name"}
         label={"竞赛名称"}
@@ -62,6 +67,13 @@ export const ContestCreate = () => {
         ]}
       >
         <Input type={"number"} min={1} max={10} />
+      </Form.Item>
+      <Form.Item
+        name={"isCreateDefaultProcess"}
+        label={"创建默认报名流程"}
+        valuePropName="checked"
+      >
+        <Checkbox>创建默认报名流程</Checkbox>
       </Form.Item>
       <Form.Item>
         <LongButton loading={isLoading} htmlType={"submit"} type={"primary"}>

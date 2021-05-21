@@ -1,5 +1,5 @@
 import { Form, Input, message } from "antd";
-import { LongButton } from "../UnAuthenticatedBackApp";
+import { LongButton } from "../index";
 import React from "react";
 import { useHttp } from "../../../../utils/http";
 import { useAsync } from "../../../../utils/use-async";

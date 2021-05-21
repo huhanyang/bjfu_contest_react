@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Input, message, Radio } from "antd";
-import { LongButton } from "../UnAuthenticatedBackApp";
+import { LongButton } from "../index";
 import { useAsync } from "../../../../utils/use-async";
 import { useHttp } from "../../../../utils/http";
 import { useNavigate } from "react-router";

@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "context/auth-context";
 import { Button, Divider, Form, Input, message } from "antd";
 import { useAsync } from "utils/use-async";
-import { CardTitle, LongButton } from "../UnAuthenticatedBackApp";
+import { CardTitle, LongButton } from "../index";
 import { Link } from "react-router-dom";
 
 export const Login = () => {

@@ -2,20 +2,20 @@ import React, { useState } from "react";
 import { Button, Input, Space, Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  CompareFn,
   FilterValue,
   SorterResult,
   TableCurrentDataSource,
   TablePaginationConfig,
 } from "antd/lib/table/interface";
 import {
-  Contest,
   ContestListCreatedRequest,
   useCreatedContests,
 } from "../../../../../utils/contest";
-import { SingleFieldSorter } from "../../../../../types/Request";
+import { SingleFieldSorter } from "../../../../../types/request";
 import { Link } from "react-router-dom";
 import { generatePath } from "react-router";
+import { Contest } from "../../../../../types/contest";
+import { ContestPopover } from "../../../../../components/contest-popover";
 
 export const ListCreated = () => {
   const [requestParams, setRequestParams] = useState({
@@ -110,6 +110,7 @@ export const ListCreated = () => {
               </Space>
             </div>
           )}
+          render={(text, record) => <ContestPopover contest={record} />}
         />
         <Table.Column<Contest>
           title="状态"
@@ -144,7 +145,7 @@ export const ListCreated = () => {
           key="operate"
           render={(text, record) => (
             <Link
-              to={generatePath("/back/contest/contestInfo/:contestId", {
+              to={generatePath("/back/contest/info/:contestId", {
                 contestId: String(record.id),
               })}
             >

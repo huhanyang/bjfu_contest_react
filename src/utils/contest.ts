@@ -9,26 +9,8 @@ import {
   useNoOpsConfig,
 } from "utils/use-optimistic-options";
 import { User } from "../types/user";
-import { PageAndSingleFieldSorterRequest } from "../types/Request";
-
-type ContestStatus =
-  | "CREATING"
-  | "REGISTERING"
-  | "RUNNING"
-  | "FINISH"
-  | "DELETE";
-
-export interface Contest {
-  id: number;
-  name: string;
-  summary: string;
-  description: string;
-  creator: User;
-  createdTime: string;
-  status: ContestStatus;
-  groupMemberCount: number;
-  extension: string;
-}
+import { PageAndSingleFieldSorterRequest } from "../types/request";
+import { Contest, ContestStatus } from "../types/contest";
 
 export const useContest = (id?: number) => {
   const client = useHttp();

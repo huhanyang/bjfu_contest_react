@@ -7,27 +7,13 @@ import {
   useEditSingleConfig,
   useNoOpsConfig,
 } from "utils/use-optimistic-options";
-import { User } from "../types/user";
-import { PageAndSingleFieldSorterRequest } from "../types/Request";
-
-type ProcessStatus = "CREATING" | "RUNNING" | "FINISH" | "DELETE";
-
-export interface Process {
-  id: number;
-  name: string;
-  sort: number;
-  status: ProcessStatus;
-  description: string;
-  submitList: string;
-  startTime: string;
-  endSubmitTime: string;
-  finishTime: string;
-}
+import { Process } from "../types/process";
+import { Group } from "../types/group";
 
 export const useProcess = (contestId?: number, processId?: number) => {
   const client = useHttp();
   return useQuery<Process>(
-    ["process", { contestId, processId }],
+    ["process", "info", { processId }],
     () =>
       client(`contest/process/getInfo`, {
         data: {
@@ -44,7 +30,7 @@ export const useProcess = (contestId?: number, processId?: number) => {
 export const useProcesses = (contestId?: number) => {
   const client = useHttp();
   return useQuery<Process[]>(
-    ["processes", { contestId }],
+    ["process", "all", { contestId }],
     () =>
       client(`contest/process/listAll`, {
         data: {
@@ -73,7 +59,7 @@ export const useCreateProcessInfo = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useEditConfig(["processes", { contestId }])
+    useNoOpsConfig(["process", "all", { contestId }])
   );
 };
 
@@ -94,7 +80,7 @@ export const useEditProcessInfo = (contestId?: number, processId?: number) => {
         method: "POST",
         data: params,
       }),
-    useEditConfig(["processes", { contestId }])
+    useNoOpsConfig(["process"])
   );
 };
 
@@ -106,6 +92,41 @@ export const useDeleteProcess = (contestId?: number) => {
         method: "DELETE",
         data: { ...params, contestId },
       }),
-    useDeleteConfig(["processes", { contestId }])
+    useNoOpsConfig(["process"])
+  );
+};
+
+export const usePromotableGroups = (targetProcessId?: number) => {
+  const client = useHttp();
+  return useQuery<Group[]>(
+    ["process", "promotable-groups", { targetProcessId }],
+    () =>
+      client(`contest/process/listPromotableGroups`, {
+        data: { targetProcessId },
+      })
+  );
+};
+
+export const usePromoteGroups = (processId?: number) => {
+  const client = useHttp();
+  return useMutation(
+    (params: { groupIds: number[] }) =>
+      client(`contest/process/promoteGroups`, {
+        method: "POST",
+        data: { ...params, processId },
+      }),
+    useNoOpsConfig(["process"])
+  );
+};
+
+export const useDemoteGroups = (processId?: number) => {
+  const client = useHttp();
+  return useMutation(
+    (params: { groupIds: number[] }) =>
+      client(`contest/process/demoteGroups`, {
+        method: "POST",
+        data: { ...params, processId },
+      }),
+    useNoOpsConfig(["process"])
   );
 };

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Contest,
   ContestListAllRequest,
   useAllContests,
 } from "../../../../../utils/contest";
@@ -11,12 +10,14 @@ import {
   TableCurrentDataSource,
   TablePaginationConfig,
 } from "antd/lib/table/interface";
-import { SingleFieldSorter } from "../../../../../types/Request";
+import { SingleFieldSorter } from "../../../../../types/request";
 import { Button, Input, Popover, Space, Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { generatePath } from "react-router";
 import { User } from "../../../../../types/user";
+import { Contest } from "../../../../../types/contest";
+import { ContestPopover } from "../../../../../components/contest-popover";
 
 export const ListAll = () => {
   const [requestParams, setRequestParams] = useState({
@@ -111,7 +112,7 @@ export const ListAll = () => {
       title={creator.name}
     >
       <Link
-        to={generatePath("/back/userInfo/:userId", {
+        to={generatePath("/back/user/info/:userId", {
           userId: String(creator.id),
         })}
       >
@@ -141,6 +142,7 @@ export const ListAll = () => {
             />
           )}
           filterDropdown={filterDropdown}
+          render={(text, record) => <ContestPopover contest={record} />}
         />
         <Table.Column<Contest>
           title="状态"
@@ -200,7 +202,7 @@ export const ListAll = () => {
           key="operate"
           render={(text, record) => (
             <Link
-              to={generatePath("/back/contest/contestInfo/:contestId", {
+              to={generatePath("/back/contest/info/:contestId", {
                 contestId: String(record.id),
               })}
             >

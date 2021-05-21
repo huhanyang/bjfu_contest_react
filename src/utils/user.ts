@@ -8,7 +8,7 @@ import {
   useEditSingleConfig,
   useNoOpsConfig,
 } from "utils/use-optimistic-options";
-import { User } from "../types/user";
+import { User, UserGender, UserStatus, UserType } from "../types/user";
 
 export const useUser = (id?: number) => {
   const client = useHttp();
@@ -30,10 +30,10 @@ export interface ChangeUserInfo {
   userId: number;
   account: string;
   email: string;
-  type: "STUDENT" | "TEACHER" | "ADMIN";
-  status: "UNACTIVE" | "ACTIVE" | "BANNED" | "DELETE";
+  type: UserType;
+  status: UserStatus;
   name: string;
-  gender: "MALE" | "FEMALE" | "SECRECY";
+  gender: UserGender;
   grade: string;
   college: string;
   major: string;
@@ -67,5 +67,23 @@ export const useEditSelfInfo = (id?: number) => {
         data: params,
       }),
     useEditSingleConfig(["user", { id }])
+  );
+};
+
+export const useSearchUser = (name?: string, types?: UserType[]) => {
+  const client = useHttp();
+  return useQuery<User[]>(
+    ["user", { name, types }],
+    () =>
+      client(`user/search`, {
+        data: {
+          name: name,
+          types: types,
+        },
+        method: "POST",
+      }),
+    {
+      enabled: Boolean(name),
+    }
   );
 };
