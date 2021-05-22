@@ -2,6 +2,7 @@ import {
   RegisterListAllRequest,
   useAllRegisters,
   useBanRegister,
+  useDeleteRegister,
   useUnBanRegister,
 } from "../../../../../utils/register";
 import React, { useState } from "react";
@@ -35,6 +36,10 @@ export const ContestRegisterListAll = ({
   const { mutateAsync: banRegister, isLoading: isBanLoading } = useBanRegister(
     contestId
   );
+  const {
+    mutateAsync: deleteRegister,
+    isLoading: isDeleteLoading,
+  } = useDeleteRegister(contestId);
   const {
     mutateAsync: unBanRegister,
     isLoading: isUnBanLoading,
@@ -111,23 +116,42 @@ export const ContestRegisterListAll = ({
     return (
       <>
         {register.status === "SIGN_UP" ? (
-          <Popconfirm
-            onConfirm={async () => {
-              try {
-                await banRegister({
-                  contestId: Number(contestId),
-                  userId: register.user.id,
-                });
-              } catch (e) {
-                message.error(e.message);
-              }
-            }}
-            title="确定要封禁此用户么?"
-            okText="封禁"
-            cancelText="取消"
-          >
-            <Button loading={isBanLoading}>封禁</Button>
-          </Popconfirm>
+          <>
+            <Popconfirm
+              onConfirm={async () => {
+                try {
+                  await banRegister({
+                    contestId: Number(contestId),
+                    userId: register.user.id,
+                  });
+                } catch (e) {
+                  message.error(e.message);
+                }
+              }}
+              title="确定要封禁此用户么?"
+              okText="封禁"
+              cancelText="取消"
+            >
+              <Button loading={isBanLoading}>禁赛</Button>
+            </Popconfirm>
+            <Popconfirm
+              onConfirm={async () => {
+                try {
+                  await deleteRegister({
+                    contestId: Number(contestId),
+                    deleteUserAccount: register.user.account,
+                  });
+                } catch (e) {
+                  message.error(e.message);
+                }
+              }}
+              title="确定要踢出此用户么?"
+              okText="踢出"
+              cancelText="取消"
+            >
+              <Button loading={isDeleteLoading}>踢出</Button>
+            </Popconfirm>
+          </>
         ) : (
           <></>
         )}
@@ -232,14 +256,16 @@ export const ContestRegisterListAll = ({
             filterDropdown={filterDropdown}
           />
         </Table.ColumnGroup>
-        <Table.Column<ContestRegister>
-          title="操作"
-          dataIndex="operate"
-          key="operate"
-          render={(text, record) => (
-            <>{isCreator ? <CreatorOperate register={record} /> : <></>}</>
-          )}
-        />
+        {isCreator ? (
+          <Table.Column<ContestRegister>
+            title="操作"
+            dataIndex="operate"
+            key="operate"
+            render={(text, record) => <CreatorOperate register={record} />}
+          />
+        ) : (
+          <></>
+        )}
       </Table>
     </>
   );

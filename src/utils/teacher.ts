@@ -4,11 +4,12 @@ import { useNoOpsConfig } from "./use-optimistic-options";
 import { User } from "../types/user";
 import { PageAndSingleFieldSorterRequest } from "../types/request";
 import { Contest, ContestStatus } from "../types/contest";
+import { cleanObject } from "./index";
 
 export const useAllTeachers = (contestId: number) => {
   const client = useHttp();
   return useQuery<User[]>(
-    ["teacher", "all-teachers", contestId],
+    ["contest", "teacher", "all-teachers", contestId],
     () =>
       client(`contest/teacher/listAll`, {
         data: { contestId },
@@ -35,7 +36,7 @@ export const useCreateTeacher = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["teacher"])
+    useNoOpsConfig(["contest"])
   );
 };
 
@@ -47,17 +48,21 @@ export const useDeleteTeacher = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["teacher"])
+    useNoOpsConfig(["contest"])
   );
 };
 
-export const useAllTeachContests = (params?: TeacherListAllTeachContest) => {
+export const useAllTeachContests = (
+  params?: Partial<TeacherListAllTeachContest>
+) => {
   const client = useHttp();
-  return useQuery<Contest[]>(["teacher", "all-teach-contests", params], () =>
-    client(`contest/teacher/listAllTeachContests`, {
-      data: params,
-      method: "post",
-    }).then((value) => value.content)
+  return useQuery<Contest[]>(
+    ["contest", "teacher", "all-teach-contests", cleanObject(params)],
+    () =>
+      client(`contest/teacher/listAllTeachContests`, {
+        data: params,
+        method: "post",
+      }).then((value) => value.content)
   );
 };
 
@@ -69,6 +74,6 @@ export const useDeleteTeachContest = () => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["teacher"])
+    useNoOpsConfig(["contest"])
   );
 };

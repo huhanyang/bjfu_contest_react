@@ -6,7 +6,7 @@ import { Group } from "../types/group";
 export const useGroup = (groupId?: number) => {
   const client = useHttp();
   return useQuery<Group>(
-    ["group", "info", { groupId }],
+    ["contest", "group", "info", { groupId }],
     () => client(`contest/group/getInfo`, { data: { groupId } }),
     {
       enabled: Boolean(groupId),
@@ -17,7 +17,7 @@ export const useGroup = (groupId?: number) => {
 export const useAllGroupsByContest = (contestId?: number) => {
   const client = useHttp();
   return useQuery<Group[]>(
-    ["group", "all-groups-by-contest", { contestId }],
+    ["contest", "group", "all-groups-by-contest", { contestId }],
     () =>
       client(`contest/group/listAllByContest`, {
         data: {
@@ -32,7 +32,7 @@ export const useAllGroupsByContest = (contestId?: number) => {
 
 export const useAllGroupsByMember = () => {
   const client = useHttp();
-  return useQuery<Group[]>(["group", "all-groups-by-member"], () =>
+  return useQuery<Group[]>(["contest", "group", "all-groups-by-member"], () =>
     client(`contest/group/listAllByMember`)
   );
 };
@@ -51,7 +51,7 @@ export const useCreateGroup = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["group", "all-groups-by-contest", { contestId }])
+    useNoOpsConfig(["contest"])
   );
 };
 
@@ -69,7 +69,7 @@ export const useEditGroup = (contestId?: number) => {
         method: "POST",
         data: { ...params, contestId },
       }),
-    useNoOpsConfig(["group"])
+    useNoOpsConfig(["contest"])
   );
 };
 
@@ -81,6 +81,54 @@ export const useDeleteGroup = (contestId?: number) => {
         method: "DELETE",
         data: { ...params, contestId },
       }),
-    useNoOpsConfig(["group"])
+    useNoOpsConfig(["contest"])
+  );
+};
+
+export const useGroupJoinMember = (contestId?: number) => {
+  const client = useHttp();
+  return useMutation(
+    (params: { groupId: number }) =>
+      client(`contest/group/join`, {
+        method: "POST",
+        data: { ...params, contestId },
+      }),
+    useNoOpsConfig(["contest"])
+  );
+};
+
+export const useGroupKickMember = (contestId?: number) => {
+  const client = useHttp();
+  return useMutation(
+    (params: { groupId: number; userAccount: string }) =>
+      client(`contest/group/kickMember`, {
+        method: "POST",
+        data: { ...params, contestId },
+      }),
+    useNoOpsConfig(["contest"])
+  );
+};
+
+export const useTeacherJoinGroup = (contestId?: number) => {
+  const client = useHttp();
+  return useMutation(
+    (params: { groupId: number }) =>
+      client(`contest/teacher/joinGroup`, {
+        method: "POST",
+        data: { ...params, contestId },
+      }),
+    useNoOpsConfig(["contest"])
+  );
+};
+
+export const useTeacherQuitGroup = (contestId?: number) => {
+  const client = useHttp();
+  return useMutation(
+    (params: { groupId: number }) =>
+      client(`contest/teacher/quitGroup`, {
+        method: "POST",
+        data: { ...params, contestId },
+      }),
+    useNoOpsConfig(["contest"])
   );
 };

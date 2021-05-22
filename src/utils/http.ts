@@ -2,6 +2,7 @@ import qs from "qs";
 import * as auth from "auth-provider";
 import { useAuth } from "context/auth-context";
 import { useCallback } from "react";
+import { message } from "antd";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -44,7 +45,8 @@ export const http = async (
       if (response.ok && data.code === 100) {
         return data.object;
       } else if (response.ok) {
-        return Promise.reject(data);
+        message.error(data.msg);
+        return data.object;
       } else {
         return Promise.reject(data);
       }

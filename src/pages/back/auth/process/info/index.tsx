@@ -104,13 +104,6 @@ export const ProcessInfo = () => {
       <>
         <Button
           onClick={() => {
-            setPromoteGroupsModalVisible(true);
-          }}
-        >
-          导入队伍
-        </Button>
-        <Button
-          onClick={() => {
             setProcessEditModalVisible(true);
           }}
         >
@@ -134,6 +127,13 @@ export const ProcessInfo = () => {
         >
           <Button loading={isProcessDeleteLoading}>删除</Button>
         </Popconfirm>
+        <Button
+          onClick={() => {
+            setPromoteGroupsModalVisible(true);
+          }}
+        >
+          队伍管理
+        </Button>
       </>
     );
   };

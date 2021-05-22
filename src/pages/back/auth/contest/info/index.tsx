@@ -16,15 +16,14 @@ import {
   ExperimentOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "../../../../../context/auth-context";
-import { useContest } from "../../../../../utils/contest";
+import { useContest, useDeleteContest } from "../../../../../utils/contest";
 import { PageLoading } from "../../../../../components/lib";
 import { ContestEditModal } from "../edit-modal";
-import { useHttp } from "../../../../../utils/http";
-import { useAsync } from "../../../../../utils/use-async";
 import { ContestRegisterListAll } from "../../register/list/list-all";
 import {
   useCreateRegister,
   useDeleteRegister,
+  useRegister,
 } from "../../../../../utils/register";
 import { ContestProcessListAll } from "../../process/list/list-all";
 import { UserPopover } from "../../../../../components/user-popover";
@@ -35,18 +34,18 @@ import { Contest, ContestStatus } from "../../../../../types/contest";
 export const ContestInfo = () => {
   const { user } = useAuth();
   const { contestId } = useParams();
-  const { data: contest, isLoading } = useContest(Number(contestId));
-  const [contestEditModalVisible, setContestEditModalVisible] = useState(false);
-
   const navigate = useNavigate();
-  const client = useHttp();
-  const { run } = useAsync(undefined, { throwOnError: true });
-
+  const [contestEditModalVisible, setContestEditModalVisible] = useState(false);
+  const { data: contest, isLoading } = useContest(Number(contestId));
+  const { data: register } = useRegister(Number(contestId));
+  const {
+    mutateAsync: deleteContest,
+    isLoading: isDeleteContestLoading,
+  } = useDeleteContest();
   const {
     mutateAsync: createRegister,
     isLoading: isCreateRegisterLoading,
   } = useCreateRegister(Number(contestId));
-
   const {
     mutateAsync: deleteRegister,
     isLoading: isDeleteRegisterLoading,
@@ -55,8 +54,6 @@ export const ContestInfo = () => {
   const Operate = () => {
     if (user?.id === contest?.creator.id) {
       return <CreatorOperate />;
-    } else if (user?.type === "TEACHER") {
-      return <TeacherOperate />;
     } else if (user?.type === "STUDENT") {
       return <StudentOperate />;
     } else {
@@ -73,17 +70,11 @@ export const ContestInfo = () => {
         >
           编辑信息
         </Button>
-
         <Popconfirm
           onConfirm={async () => {
             try {
-              await run(
-                client("contest/delete", {
-                  data: { contestId: Number(contest?.id) },
-                  method: "DELETE",
-                })
-              ).then(() => {
-                navigate("../", { replace: true });
+              await deleteContest(Number(contestId)).then(() => {
+                navigate("/back/contest/listCreated", { replace: true });
               });
             } catch (e) {
               message.error(e.message);
@@ -93,45 +84,48 @@ export const ContestInfo = () => {
           okText="删除"
           cancelText="取消"
         >
-          <Button>删除竞赛</Button>
+          <Button loading={isDeleteContestLoading}>删除竞赛</Button>
         </Popconfirm>
       </>
     );
-  };
-  const TeacherOperate = () => {
-    return <></>;
   };
   const StudentOperate = () => {
     return (
       <>
         {contest?.status === "REGISTERING" ? (
           <>
-            <Button
-              onClick={async () => {
-                try {
-                  await createRegister({ contestId: Number(contestId) });
-                } catch (e) {
-                  message.error(e.message);
-                }
-              }}
-              loading={isCreateRegisterLoading}
-            >
-              报名
-            </Button>
-            <Popconfirm
-              onConfirm={async () => {
-                try {
-                  await deleteRegister({ contestId: Number(contestId) });
-                } catch (e) {
-                  message.error(e.message);
-                }
-              }}
-              title="确定要取消报名么?"
-              okText="取消报名"
-              cancelText="不取消"
-            >
-              <Button loading={isDeleteRegisterLoading}>取消报名</Button>
-            </Popconfirm>
+            {register?.status === "SIGN_UP" ? (
+              <Popconfirm
+                onConfirm={async () => {
+                  try {
+                    await deleteRegister({
+                      contestId: Number(contestId),
+                      deleteUserAccount: String(user?.account),
+                    });
+                  } catch (e) {
+                    message.error(e.message);
+                  }
+                }}
+                title="确定要取消报名么?"
+                okText="取消报名"
+                cancelText="不取消"
+              >
+                <Button loading={isDeleteRegisterLoading}>取消报名</Button>
+              </Popconfirm>
+            ) : (
+              <Button
+                onClick={async () => {
+                  try {
+                    await createRegister({ contestId: Number(contestId) });
+                  } catch (e) {
+                    message.error(e.message);
+                  }
+                }}
+                loading={isCreateRegisterLoading}
+              >
+                报名
+              </Button>
+            )}
           </>
         ) : (
           <></>
@@ -211,84 +205,61 @@ export const ContestInfo = () => {
     );
   };
 
-  const ContestInfo = () => {
-    return (
-      <>
-        <Descriptions
-          layout="vertical"
-          bordered
-          title={contest?.name}
-          extra={<Operate />}
-        >
-          <Descriptions.Item label="竞赛名称">
-            {contest?.name}
-          </Descriptions.Item>
-          <Descriptions.Item label="创建人">
-            <UserPopover user={contest?.creator} />
-          </Descriptions.Item>
-          <Descriptions.Item label="竞赛简介">
-            {contest?.summary}
-          </Descriptions.Item>
-          <Descriptions.Item span={2} label="竞赛状态">
-            <ContestStatusSteps contest={contest} />
-          </Descriptions.Item>
-          <Descriptions.Item label="队伍人数上限">
-            {contest?.groupMemberCount}
-          </Descriptions.Item>
-          <Descriptions.Item label="指导教师">
-            <TeacherListAll
-              contestId={Number(contestId)}
-              isCreator={user?.id === contest?.creator.id}
-            />
-          </Descriptions.Item>
-          <Descriptions.Item label="竞赛描述">
-            {contest?.description}
-          </Descriptions.Item>
-        </Descriptions>
-      </>
-    );
-  };
-  const ProcessInfo = () => {
-    return (
-      <>
-        <Divider orientation="left">竞赛流程</Divider>
-        <ContestProcessListAll
-          contestId={Number(contestId)}
-          isCreator={user?.id === contest?.creator.id}
-        />
-      </>
-    );
-  };
-  const RegistersInfo = () => {
-    return (
-      <>
-        <Divider orientation="left">报名人数</Divider>
-        <ContestRegisterListAll
-          contestId={Number(contest?.id)}
-          isCreator={contest?.creator.id === user?.id}
-        />
-      </>
-    );
-  };
-  const GroupsInfo = () => {
-    return (
-      <>
-        <Divider orientation="left">竞赛队伍</Divider>
-        <GroupListAllByContest contestId={Number(contest?.id)} />
-      </>
-    );
-  };
-
   return (
     <>
       {isLoading ? (
         <PageLoading />
       ) : (
         <>
-          <ContestInfo />
-          <ProcessInfo />
-          <RegistersInfo />
-          <GroupsInfo />
+          <Descriptions
+            layout="vertical"
+            bordered
+            title={contest?.name}
+            extra={<Operate />}
+          >
+            <Descriptions.Item label="竞赛名称">
+              {contest?.name}
+            </Descriptions.Item>
+            <Descriptions.Item label="创建人">
+              <UserPopover user={contest?.creator} />
+            </Descriptions.Item>
+            <Descriptions.Item label="竞赛简介">
+              {contest?.summary}
+            </Descriptions.Item>
+            <Descriptions.Item span={2} label="竞赛状态">
+              <ContestStatusSteps contest={contest} />
+            </Descriptions.Item>
+            <Descriptions.Item label="队伍人数上限">
+              {contest?.groupMemberCount}
+            </Descriptions.Item>
+            <Descriptions.Item label="指导教师">
+              <TeacherListAll
+                contestId={Number(contestId)}
+                isCreator={user?.id === contest?.creator.id}
+              />
+            </Descriptions.Item>
+            <Descriptions.Item label="竞赛描述">
+              {contest?.description}
+            </Descriptions.Item>
+          </Descriptions>
+
+          <Divider orientation="left">竞赛流程</Divider>
+          <ContestProcessListAll
+            contestId={Number(contestId)}
+            isCreator={user?.id === contest?.creator.id}
+          />
+
+          <Divider orientation="left">报名人数</Divider>
+          <ContestRegisterListAll
+            contestId={Number(contest?.id)}
+            isCreator={contest?.creator.id === user?.id}
+          />
+
+          <Divider orientation="left">竞赛队伍</Divider>
+          <GroupListAllByContest
+            contestId={Number(contestId)}
+            isCreator={contest?.creator.id === user?.id}
+          />
         </>
       )}
       {contest?.creator.id === user?.id ? (

@@ -4,6 +4,7 @@ import { TeacherCreateModal } from "../create-modal";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { generatePath } from "react-router";
+import { useContest } from "../../../../../utils/contest";
 
 export const TeacherListAll = ({
   contestId,
@@ -12,7 +13,8 @@ export const TeacherListAll = ({
   contestId: number;
   isCreator: boolean;
 }) => {
-  const { data: teachers } = useAllTeachers(contestId);
+  const { data: contestInfo } = useContest(Number(contestId));
+
   const [teacherAddModalVisible, setTeacherAddModalVisible] = useState(false);
   const {
     mutateAsync: deleteTeacher,
@@ -21,7 +23,7 @@ export const TeacherListAll = ({
 
   const menu = (
     <Menu>
-      {teachers?.map((teacher) => {
+      {contestInfo?.teachers?.map((teacher) => {
         return (
           <>
             <Menu.SubMenu

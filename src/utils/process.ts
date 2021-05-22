@@ -6,8 +6,9 @@ import { Group } from "../types/group";
 
 export const useProcess = (contestId?: number, processId?: number) => {
   const client = useHttp();
+
   return useQuery<Process>(
-    ["process", "info", { processId }],
+    ["contest", "process", "info", { processId }],
     () =>
       client(`contest/process/getInfo`, {
         data: {
@@ -24,7 +25,7 @@ export const useProcess = (contestId?: number, processId?: number) => {
 export const useProcesses = (contestId?: number) => {
   const client = useHttp();
   return useQuery<Process[]>(
-    ["process", "all", { contestId }],
+    ["contest", "process", "all", { contestId }],
     () =>
       client(`contest/process/listAll`, {
         data: {
@@ -53,7 +54,7 @@ export const useCreateProcessInfo = (contestId?: number) => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["process", "all", { contestId }])
+    useNoOpsConfig(["contest"])
   );
 };
 
@@ -74,7 +75,7 @@ export const useEditProcessInfo = (contestId?: number, processId?: number) => {
         method: "POST",
         data: params,
       }),
-    useNoOpsConfig(["process"])
+    useNoOpsConfig(["contest"])
   );
 };
 
@@ -86,14 +87,14 @@ export const useDeleteProcess = (contestId?: number) => {
         method: "DELETE",
         data: { ...params, contestId },
       }),
-    useNoOpsConfig(["process"])
+    useNoOpsConfig(["contest"])
   );
 };
 
 export const usePromotableGroups = (targetProcessId?: number) => {
   const client = useHttp();
   return useQuery<Group[]>(
-    ["process", "promotable-groups", { targetProcessId }],
+    ["contest", "process", "promotable-groups", { targetProcessId }],
     () =>
       client(`contest/process/listPromotableGroups`, {
         data: { targetProcessId },
@@ -109,7 +110,7 @@ export const usePromoteGroups = (processId?: number) => {
         method: "POST",
         data: { ...params, processId },
       }),
-    useNoOpsConfig(["process"])
+    useNoOpsConfig(["contest"])
   );
 };
 
@@ -121,6 +122,6 @@ export const useDemoteGroups = (processId?: number) => {
         method: "POST",
         data: { ...params, processId },
       }),
-    useNoOpsConfig(["process"])
+    useNoOpsConfig(["contest"])
   );
 };

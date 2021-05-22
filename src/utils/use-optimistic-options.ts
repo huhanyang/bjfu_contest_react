@@ -10,9 +10,6 @@ export const useConfig = (
     async onMutate(target: any) {
       const previousItems = queryClient.getQueryData(queryKey);
       queryClient.setQueryData(queryKey, (old?: any[]) => {
-        console.log("target", "old");
-        console.log(target);
-        console.log(old);
         return callback(target, old);
       });
       return { previousItems };

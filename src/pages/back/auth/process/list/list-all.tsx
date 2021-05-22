@@ -1,4 +1,4 @@
-import { Avatar, Button, List, Popconfirm } from "antd";
+import { Avatar, Button, List, message, Popconfirm } from "antd";
 import { useDeleteProcess, useProcesses } from "../../../../../utils/process";
 import React, { useState } from "react";
 import { ProcessCreateModal } from "../create-modal";
@@ -8,6 +8,7 @@ import { Process } from "../../../../../types/process";
 import { Link } from "react-router-dom";
 import { generatePath } from "react-router";
 import { ProcessPopover } from "../../../../../components/process-popover";
+import { useContest } from "../../../../../utils/contest";
 
 export const ContestProcessListAll = ({
   contestId,
@@ -16,9 +17,10 @@ export const ContestProcessListAll = ({
   contestId: number;
   isCreator: boolean;
 }) => {
-  const { data: processes, isLoading: isProcessesLoading } = useProcesses(
+  const { data: contestInfo, isLoading: isContestInfoLoading } = useContest(
     Number(contestId)
   );
+
   const [editProcessId, setEditProcessId] = useState(
     undefined as number | undefined
   );
@@ -35,9 +37,9 @@ export const ContestProcessListAll = ({
     <>
       <List<Process>
         rowKey={(item) => String(item.id)}
-        loading={isProcessesLoading}
+        loading={isContestInfoLoading}
         itemLayout="horizontal"
-        dataSource={processes}
+        dataSource={contestInfo?.processes}
         renderItem={(item) => (
           <List.Item
             actions={
@@ -54,8 +56,12 @@ export const ContestProcessListAll = ({
                     </Button>,
                     <Popconfirm
                       title="确定要删除此流程么?"
-                      onConfirm={() => {
-                        deleteProcess({ processId: item.id });
+                      onConfirm={async () => {
+                        try {
+                          await deleteProcess({ processId: item.id });
+                        } catch (e) {
+                          message.error(e.message);
+                        }
                       }}
                       okText="删除"
                       cancelText="取消"

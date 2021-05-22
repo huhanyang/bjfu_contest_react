@@ -10,11 +10,19 @@ import { GroupCreateModal } from "../create-modal";
 import { GroupEditModal } from "../edit-modal";
 import { Group } from "../../../../../types/group";
 import { GroupPopover } from "../../../../../components/group-popover";
+import { useContest } from "../../../../../utils/contest";
 
-export const GroupListAllByContest = ({ contestId }: { contestId: number }) => {
-  const { data: groups, isLoading: isGroupsLoading } = useAllGroupsByContest(
-    contestId
+export const GroupListAllByContest = ({
+  contestId,
+  isCreator,
+}: {
+  contestId: number;
+  isCreator: boolean | undefined;
+}) => {
+  const { data: contestInfo, isLoading: isContestInfoLoading } = useContest(
+    Number(contestId)
   );
+
   const { data: register } = useRegister(contestId);
   const [createGroupVisible, setCreateGroupVisible] = useState(false);
   const [editGroupVisible, setEditGroupVisible] = useState(false);
@@ -44,8 +52,8 @@ export const GroupListAllByContest = ({ contestId }: { contestId: number }) => {
         bordered
         scroll={{ x: "100%" }}
         rowKey="id"
-        dataSource={groups}
-        loading={isGroupsLoading}
+        dataSource={contestInfo?.groups}
+        loading={isContestInfoLoading}
         title={() => (
           <>
             {register?.status === "SIGN_UP" ? (
@@ -103,41 +111,38 @@ export const GroupListAllByContest = ({ contestId }: { contestId: number }) => {
             key="captainCollege"
           />
         </Table.ColumnGroup>
-        <Table.Column<Group>
-          title="操作"
-          dataIndex="operate"
-          key="operate"
-          render={(text, record) => (
-            <>
-              {register?.groups?.filter((group) => group.id === record.id)
-                .length ? (
-                <>
-                  <Button
-                    onClick={() => {
-                      setEditGroupId(record.id);
-                      setEditGroupVisible(true);
-                    }}
-                  >
-                    编辑信息
-                  </Button>
-                  <Button
-                    onClick={async () => {
-                      try {
-                        await deleteGroup({ groupId: record.id });
-                      } catch (e) {
-                        message.error(e.message);
-                      }
-                    }}
-                  >
-                    解散队伍
-                  </Button>
-                </>
-              ) : (
-                <></>
-              )}
-            </>
-          )}
-        />
+        {isCreator ? (
+          <Table.Column<Group>
+            title="操作"
+            dataIndex="operate"
+            key="operate"
+            render={(text, record) => (
+              <>
+                <Button
+                  onClick={() => {
+                    setEditGroupId(record.id);
+                    setEditGroupVisible(true);
+                  }}
+                >
+                  编辑信息
+                </Button>
+                <Button
+                  onClick={async () => {
+                    try {
+                      await deleteGroup({ groupId: record.id });
+                    } catch (e) {
+                      message.error(e.message);
+                    }
+                  }}
+                >
+                  解散队伍
+                </Button>
+              </>
+            )}
+          />
+        ) : (
+          <></>
+        )}
       </Table>
       {register?.status === "SIGN_UP" ? (
         <GroupCreateModal

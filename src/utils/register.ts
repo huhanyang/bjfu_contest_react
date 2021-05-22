@@ -57,7 +57,7 @@ export const useCreateRegister = (contestId?: number) => {
 export const useDeleteRegister = (contestId?: number) => {
   const client = useHttp();
   return useMutation(
-    (params: { contestId: number }) =>
+    (params: { contestId: number; deleteUserAccount: string }) =>
       client(`contest/register/delete`, {
         method: "DELETE",
         data: params,
