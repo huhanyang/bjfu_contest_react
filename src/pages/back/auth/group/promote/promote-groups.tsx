@@ -19,22 +19,10 @@ export const ProcessPromoteGroups = ({
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const {
-    data: promotableGroups,
-    isLoading: isPromotableGroupsLoading,
-  } = usePromotableGroups(processId);
-  const { data: process, isLoading: isProcessLoading } = useProcess(
-    contestId,
-    processId
-  );
-  const {
-    mutateAsync: promoteGroups,
-    isLoading: isPromoteGroupsFinish,
-  } = usePromoteGroups(processId);
-  const {
-    mutateAsync: demoteGroups,
-    isLoading: isDemoteGroupsFinish,
-  } = useDemoteGroups(processId);
+  const { data: promotableGroups } = usePromotableGroups(processId);
+  const { data: process } = useProcess(contestId, processId);
+  const { mutateAsync: promoteGroups } = usePromoteGroups(processId);
+  const { mutateAsync: demoteGroups } = useDemoteGroups(processId);
 
   const promoteGroupsRequest = async (ids: number[]) => {
     try {

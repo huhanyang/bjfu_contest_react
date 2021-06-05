@@ -1,5 +1,5 @@
 import { Button, Dropdown, Menu, message } from "antd";
-import { useAllTeachers, useDeleteTeacher } from "../../../../../utils/teacher";
+import { useDeleteTeacher } from "../../../../../utils/teacher";
 import { TeacherCreateModal } from "../create-modal";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -40,7 +40,7 @@ export const TeacherListAll = ({
               </Menu.Item>
               {isCreator ? (
                 <Menu.Item>
-                  <a
+                  <Button
                     type="link"
                     onClick={async () => {
                       if (!isDeleteTeacherLoading) {
@@ -56,7 +56,7 @@ export const TeacherListAll = ({
                     }}
                   >
                     删除教师
-                  </a>
+                  </Button>
                 </Menu.Item>
               ) : (
                 <></>
@@ -88,9 +88,9 @@ export const TeacherListAll = ({
   return (
     <>
       <Dropdown overlay={menu}>
-        <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+        <Button type="link" className="ant-dropdown-link">
           指导教师列表
-        </a>
+        </Button>
       </Dropdown>
       <TeacherCreateModal
         contestId={Number(contestId)}

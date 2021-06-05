@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { generatePath } from "react-router";
 import { Popover } from "antd";
 import React from "react";
-import { Contest } from "../types/contest";
+import { Contest, getContestStatusInfo } from "../types/contest";
 
 export const ContestPopover = ({
   contest,
@@ -19,7 +19,7 @@ export const ContestPopover = ({
               <br />
               简介：{contest.summary}
               <br />
-              状态：{contest.status}
+              状态：{getContestStatusInfo(contest.status)}
               {contest.creator ? (
                 <>
                   <br />

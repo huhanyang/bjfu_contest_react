@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider } from "antd";
-import { CardTitle, LongButton } from "../index";
+import { CardTitle } from "../index";
 import { Link } from "react-router-dom";
 import { Routes, Route, Navigate } from "react-router";
 

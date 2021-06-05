@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Button, message, Modal } from "antd";
+import { message, Modal } from "antd";
 import { UserSelect } from "../../../../components/user-select";
-import { useAllTeachers, useCreateTeacher } from "../../../../utils/teacher";
+import { useCreateTeacher } from "../../../../utils/teacher";
 import { LongButton } from "../../unauth";
 
 export const TeacherCreateModal = ({

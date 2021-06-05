@@ -92,7 +92,9 @@ export const GroupInfo = () => {
         >
           编辑
         </Button>
-        <Button onClick={deleteGroupRequest}>解散</Button>
+        <Button loading={isDeleteGroupLoading} onClick={deleteGroupRequest}>
+          解散
+        </Button>
       </>
     );
   };
@@ -108,9 +110,23 @@ export const GroupInfo = () => {
 
   const ContestTeacherOperates = () => {
     if (groupInfo?.teacher?.id === user?.id) {
-      return <Button onClick={teacherQuitGroupRequest}>退出指导</Button>;
+      return (
+        <Button
+          loading={isTeacherQuitGroupLoading}
+          onClick={teacherQuitGroupRequest}
+        >
+          退出指导
+        </Button>
+      );
     }
-    return <Button onClick={teacherJoinGroupRequest}>成为指导</Button>;
+    return (
+      <Button
+        loading={isTeacherJoinGroupLoading}
+        onClick={teacherJoinGroupRequest}
+      >
+        成为指导
+      </Button>
+    );
   };
 
   const ContestRegisterOperates = () => {
@@ -135,7 +151,11 @@ export const GroupInfo = () => {
       Number(groupInfo?.contest?.groupMemberCount) >
       Number(groupInfo?.members?.length)
     ) {
-      return <Button onClick={joinGroupRequest}>加入队伍</Button>;
+      return (
+        <Button loading={isJoinGroupLoading} onClick={joinGroupRequest}>
+          加入队伍
+        </Button>
+      );
     }
     return <></>;
   };

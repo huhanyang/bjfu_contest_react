@@ -1,12 +1,10 @@
-import { Avatar, Button, List, message, Popconfirm } from "antd";
-import { useDeleteProcess, useProcesses } from "../../../../../utils/process";
+import { Button, List, message, Popconfirm } from "antd";
+import { useDeleteProcess } from "../../../../../utils/process";
 import React, { useState } from "react";
 import { ProcessCreateModal } from "../create-modal";
 import { ProcessEditModal } from "../edit-modal";
 import { CheckCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Process } from "../../../../../types/process";
-import { Link } from "react-router-dom";
-import { generatePath } from "react-router";
 import { ProcessPopover } from "../../../../../components/process-popover";
 import { useContest } from "../../../../../utils/contest";
 

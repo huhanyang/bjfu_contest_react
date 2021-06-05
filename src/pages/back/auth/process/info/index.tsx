@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Descriptions,
@@ -35,10 +35,7 @@ export const ProcessInfo = () => {
     false
   );
 
-  const { data: process, isLoading: isProcessLoading } = useProcess(
-    Number(contestId),
-    Number(processId)
-  );
+  const { data: process } = useProcess(Number(contestId), Number(processId));
 
   const ProcessStatusSteps = ({
     process,

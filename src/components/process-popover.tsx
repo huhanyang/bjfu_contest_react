@@ -1,4 +1,4 @@
-import { Process } from "../types/process";
+import { getProcessStatusInfo, Process } from "../types/process";
 import { Popover } from "antd";
 import { Link } from "react-router-dom";
 import { generatePath } from "react-router";
@@ -19,7 +19,7 @@ export const ProcessPopover = ({
             <div>
               流程名：{process.name}
               <br />
-              状态：{process.status}
+              状态：{getProcessStatusInfo(process.status)}
               <br />
               创建时间：{new Date(process.createdTime).toLocaleString()}
             </div>

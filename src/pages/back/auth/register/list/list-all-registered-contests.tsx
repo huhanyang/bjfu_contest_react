@@ -1,21 +1,13 @@
-import {
-  useAllRegisteredContests,
-  useDeleteRegisteredContest,
-} from "../../../../../utils/register";
-import {
-  FilterConfirmProps,
-  FilterValue,
-  SorterResult,
-  TablePaginationConfig,
-} from "antd/lib/table/interface";
-import { SingleFieldSorter } from "../../../../../types/request";
-import React, { useState } from "react";
-import { Button, Input, message, Popconfirm, Space, Table } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { useAllRegisteredContests } from "../../../../../utils/register";
+import React from "react";
+import { Table } from "antd";
 import { UserPopover } from "../../../../../components/user-popover";
 import { Link } from "react-router-dom";
 import { generatePath } from "react-router";
-import { ContestRegister } from "../../../../../types/contest-register";
+import {
+  ContestRegister,
+  getContestRegisterStatusInfo,
+} from "../../../../../types/contest-register";
 import { ContestPopover } from "../../../../../components/contest-popover";
 
 export const RegisterListAllRegisteredContests = () => {
@@ -23,10 +15,6 @@ export const RegisterListAllRegisteredContests = () => {
     data: contests,
     isLoading: contestsIsLoading,
   } = useAllRegisteredContests();
-  const {
-    mutateAsync: deleteContest,
-    isLoading: deleteContestLoading,
-  } = useDeleteRegisteredContest();
 
   return (
     <>
@@ -63,6 +51,9 @@ export const RegisterListAllRegisteredContests = () => {
             title="竞赛状态"
             dataIndex={["contest", "status"]}
             key="contestStatus"
+            render={(text, record) =>
+              getContestRegisterStatusInfo(record.status)
+            }
           />
           <Table.Column<ContestRegister>
             title="创建人"

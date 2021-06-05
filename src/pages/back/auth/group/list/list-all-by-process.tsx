@@ -18,7 +18,7 @@ export const GroupListAllByProcess = ({
   );
   const {
     mutateAsync: demoteGroups,
-    isLoading: isDemoteGroupsFinish,
+    isLoading: isDemoteGroupsLoading,
   } = useDemoteGroups(processId);
 
   return (
@@ -90,7 +90,7 @@ export const GroupListAllByProcess = ({
                 okText="删除"
                 cancelText="取消"
               >
-                <Button loading={isProcessLoading}>删除队伍</Button>
+                <Button loading={isDemoteGroupsLoading}>删除队伍</Button>
               </Popconfirm>
             </>
           )}

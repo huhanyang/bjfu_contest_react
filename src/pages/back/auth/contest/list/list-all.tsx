@@ -16,7 +16,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { generatePath } from "react-router";
 import { User } from "../../../../../types/user";
-import { Contest } from "../../../../../types/contest";
+import { Contest, getContestStatusInfo } from "../../../../../types/contest";
 import { ContestPopover } from "../../../../../components/contest-popover";
 
 export const ListAll = () => {
@@ -155,6 +155,7 @@ export const ListAll = () => {
             { text: "进程中", value: "RUNNING" },
             { text: "结束", value: "FINISH" },
           ]}
+          render={(text, record) => getContestStatusInfo(record.status)}
         />
         <Table.Column<Contest>
           title="队伍人数上限"

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Avatar, Badge, Dropdown, Layout, Menu } from "antd";
+import { Avatar, Badge, Button, Dropdown, Layout, Menu } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
@@ -29,7 +29,9 @@ export const AuthenticatedApp = () => {
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <a onClick={logout}>退出登录</a>
+        <Button type="link" onClick={logout}>
+          退出登录
+        </Button>
       </Menu.Item>
     </Menu>
   );

@@ -20,7 +20,7 @@ export const RegisterActivate = () => {
     } else {
       run(activate({ token }));
     }
-  }, [token]);
+  }, [token, activate, run, navigate]);
 
   return (
     <>

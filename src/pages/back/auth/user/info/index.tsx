@@ -6,6 +6,11 @@ import React, { useState } from "react";
 import { PageLoading } from "../../../../../components/lib";
 import { AdminEditInfoModal } from "../admin-edit-modal";
 import { EditInfoModal } from "../edit-modal";
+import {
+  getUserGenderInfo,
+  getUserStatusInfo,
+  getUserTypeInfo,
+} from "../../../../../types/user";
 
 export const UserInfo = () => {
   const { user: me } = useAuth();
@@ -50,9 +55,16 @@ export const UserInfo = () => {
           }
         >
           <Descriptions.Item label="学工号">{user?.account}</Descriptions.Item>
-          <Descriptions.Item label="账号类型">{user?.type}</Descriptions.Item>
+          <Descriptions.Item label="账号类型">
+            {user ? getUserTypeInfo(user.type) : ""}
+          </Descriptions.Item>
+          <Descriptions.Item label="账号状态">
+            {user ? getUserStatusInfo(user?.status) : ""}
+          </Descriptions.Item>
           <Descriptions.Item label="真实姓名">{user?.name}</Descriptions.Item>
-          <Descriptions.Item label="性别">{user?.gender}</Descriptions.Item>
+          <Descriptions.Item label="性别">
+            {user ? getUserGenderInfo(user?.gender) : ""}
+          </Descriptions.Item>
           <Descriptions.Item label="邮箱">{user?.email}</Descriptions.Item>
           <Descriptions.Item label="年级">{user?.grade}</Descriptions.Item>
           <Descriptions.Item label="学院">{user?.college}</Descriptions.Item>

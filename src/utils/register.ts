@@ -8,7 +8,7 @@ import {
   ContestRegisterStatus,
 } from "../types/contest-register";
 
-export const useRegister = (contestId: number) => {
+export const useRegister = (contestId?: number) => {
   const client = useHttp();
   return useQuery<ContestRegister>(
     ["register", "info", { contestId }],

@@ -2,7 +2,6 @@ import {
   TeacherListAllTeachContest,
   useAllTeachContests,
   useDeleteTeachContest,
-  useDeleteTeacher,
 } from "../../../../../utils/teacher";
 import React, { useState } from "react";
 import {
@@ -233,7 +232,9 @@ export const TeacherListAllTeachContests = () => {
                 okText="退出"
                 cancelText="取消"
               >
-                <Button type="link">退出</Button>
+                <Button loading={isDeleteTeachContestLoading} type="link">
+                  退出
+                </Button>
               </Popconfirm>
             </>
           )}

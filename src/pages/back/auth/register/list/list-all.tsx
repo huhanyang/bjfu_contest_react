@@ -16,7 +16,10 @@ import { SingleFieldSorter } from "../../../../../types/request";
 import { Button, Input, message, Popconfirm, Space, Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { UserPopover } from "../../../../../components/user-popover";
-import { ContestRegister } from "../../../../../types/contest-register";
+import {
+  ContestRegister,
+  getContestRegisterStatusInfo,
+} from "../../../../../types/contest-register";
 
 export const ContestRegisterListAll = ({
   contestId,
@@ -199,6 +202,7 @@ export const ContestRegisterListAll = ({
             { text: "已报名", value: "SIGN_UP" },
             { text: "封禁", value: "BAN" },
           ]}
+          render={(text, record) => getContestRegisterStatusInfo(record.status)}
         />
         <Table.Column<ContestRegister>
           title="创建时间"

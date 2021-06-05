@@ -3,6 +3,21 @@ import { Contest } from "./contest";
 
 export type ProcessStatus = "CREATING" | "RUNNING" | "FINISH" | "DELETE";
 
+export const getProcessStatusInfo = (status: ProcessStatus) => {
+  switch (status) {
+    case "CREATING":
+      return "创建中";
+    case "RUNNING":
+      return "进程中";
+    case "FINISH":
+      return "结束";
+    case "DELETE":
+      return "软删除";
+    default:
+      return status;
+  }
+};
+
 export interface Process {
   id: number;
   createdTime: string;

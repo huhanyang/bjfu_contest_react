@@ -1,5 +1,5 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { Button, Card, Divider, Row, Col } from "antd";
+import React from "react";
+import { Button, Card, Row, Col } from "antd";
 import styled from "@emotion/styled";
 import logo from "assets/logo.svg";
 import { useDocumentTitle } from "utils";

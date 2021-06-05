@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { generatePath } from "react-router";
 import { Popover } from "antd";
 import React from "react";
-import { User } from "../types/user";
+import { getUserGenderInfo, getUserTypeInfo, User } from "../types/user";
 
 export const UserPopover = ({ user }: { user: User | undefined }) => {
   return (
@@ -11,9 +11,9 @@ export const UserPopover = ({ user }: { user: User | undefined }) => {
         <Popover
           content={
             <div>
-              性别：{user?.gender}
+              性别：{getUserGenderInfo(user?.gender)}
               <br />
-              类型：{user?.type}
+              类型：{getUserTypeInfo(user?.type)}
               <br />
               学院：{user?.college}
               <br />

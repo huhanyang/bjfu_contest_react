@@ -1,12 +1,12 @@
 import React from "react";
 import { useAuth } from "context/auth-context";
-import { Button, Divider, Form, Input, message } from "antd";
+import { Divider, Form, Input, message } from "antd";
 import { useAsync } from "utils/use-async";
 import { CardTitle, LongButton } from "../index";
 import { Link } from "react-router-dom";
 
 export const Login = () => {
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const { run, isLoading } = useAsync(undefined, { throwOnError: true });
 
   // HTMLFormElement extends Element

@@ -1,7 +1,4 @@
-import {
-  useAllGroupsByContest,
-  useDeleteGroup,
-} from "../../../../../utils/group";
+import { useDeleteGroup } from "../../../../../utils/group";
 import { Button, message, Table } from "antd";
 import { UserPopover } from "../../../../../components/user-popover";
 import React, { useState } from "react";
@@ -29,7 +26,7 @@ export const GroupListAllByContest = ({
   const [editGroupId, setEditGroupId] = useState<number | undefined>(undefined);
   const {
     mutateAsync: deleteGroup,
-    isLoading: isDeleteFinish,
+    isLoading: isDeleteGroupLoading,
   } = useDeleteGroup(contestId);
 
   const RegisteredStudentOperate = () => {
@@ -127,6 +124,7 @@ export const GroupListAllByContest = ({
                   编辑信息
                 </Button>
                 <Button
+                  loading={isDeleteGroupLoading}
                   onClick={async () => {
                     try {
                       await deleteGroup({ groupId: record.id });

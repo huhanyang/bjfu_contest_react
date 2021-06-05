@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { generatePath, useNavigate, useParams } from "react-router";
 import {
   Button,
   Descriptions,
@@ -30,14 +30,19 @@ import { UserPopover } from "../../../../../components/user-popover";
 import { TeacherListAll } from "../../teacher/list/list-all";
 import { GroupListAllByContest } from "../../group/list/list-all-by-contest";
 import { Contest, ContestStatus } from "../../../../../types/contest";
+import { ResourceContestCreateModal } from "../../resource/contest-create-modal";
+import { Link } from "react-router-dom";
 
 export const ContestInfo = () => {
   const { user } = useAuth();
   const { contestId } = useParams();
   const navigate = useNavigate();
   const [contestEditModalVisible, setContestEditModalVisible] = useState(false);
+  const [addResourceModalVisible, setAddResourceModalVisible] = useState(false);
   const { data: contest, isLoading } = useContest(Number(contestId));
-  const { data: register } = useRegister(Number(contestId));
+  const { data: register } = useRegister(
+    user?.type === "STUDENT" ? Number(contestId) : undefined
+  );
   const {
     mutateAsync: deleteContest,
     isLoading: isDeleteContestLoading,
@@ -63,6 +68,21 @@ export const ContestInfo = () => {
   const CreatorOperate = () => {
     return (
       <>
+        <Button
+          onClick={() => {
+            setAddResourceModalVisible(true);
+          }}
+        >
+          上传文件
+        </Button>
+        <Link
+          to={generatePath("/back/resource/list/:type/:targetId", {
+            type: "CONTEST",
+            targetId: contestId,
+          })}
+        >
+          文件列表
+        </Link>
         <Button
           onClick={() => {
             setContestEditModalVisible(true);
@@ -263,13 +283,21 @@ export const ContestInfo = () => {
         </>
       )}
       {contest?.creator.id === user?.id ? (
-        <>
-          <ContestEditModal
-            contestId={Number(contest?.id)}
-            visible={contestEditModalVisible}
-            setVisible={setContestEditModalVisible}
-          />
-        </>
+        <ContestEditModal
+          contestId={Number(contest?.id)}
+          visible={contestEditModalVisible}
+          setVisible={setContestEditModalVisible}
+        />
+      ) : (
+        <></>
+      )}
+      {contest?.creator.id === user?.id ||
+      contest?.teachers?.filter((teacher) => user?.id === teacher.id).length ? (
+        <ResourceContestCreateModal
+          contestId={Number(contestId)}
+          visible={addResourceModalVisible}
+          setVisible={setAddResourceModalVisible}
+        />
       ) : (
         <></>
       )}
