@@ -1,9 +1,9 @@
 import React from "react";
 import { useAuth } from "../../../context/auth-context";
 import { Route, Routes } from "react-router";
-import { UserRouter } from "./user/router";
-import { ContestRoutes } from "./contest/routes";
-import { ResourceListAll } from "./resource/list/list-all";
+import { UserRouter } from "./user/user-routes";
+import { ContestRoutes } from "./contest/contest-routes";
+import { ResourceRoutes } from "./resource/resource-routes";
 
 export const AuthRoutes = () => {
   const { user } = useAuth();
@@ -13,10 +13,7 @@ export const AuthRoutes = () => {
       <Routes>
         <Route path={"/user/*"} element={<UserRouter />} />
         <Route path={"/contest/*"} element={<ContestRoutes />} />
-        <Route
-          path={"/resource/list/:type/:targetId"}
-          element={<ResourceListAll />}
-        />
+        <Route path={"/resource/*"} element={<ResourceRoutes />} />
       </Routes>
     );
   };
@@ -26,10 +23,7 @@ export const AuthRoutes = () => {
       <Routes>
         <Route path={"/user/*"} element={<UserRouter />} />
         <Route path={"/contest/*"} element={<ContestRoutes />} />
-        <Route
-          path={"/resource/list/:type/:targetId"}
-          element={<ResourceListAll />}
-        />
+        <Route path={"/resource/*"} element={<ResourceRoutes />} />
       </Routes>
     );
   };
@@ -39,10 +33,7 @@ export const AuthRoutes = () => {
       <Routes>
         <Route path={"/user/*"} element={<UserRouter />} />
         <Route path={"/contest/*"} element={<ContestRoutes />} />
-        <Route
-          path={"/resource/list/:type/:targetId"}
-          element={<ResourceListAll />}
-        />
+        <Route path={"/resource/*"} element={<ResourceRoutes />} />
       </Routes>
     );
   };

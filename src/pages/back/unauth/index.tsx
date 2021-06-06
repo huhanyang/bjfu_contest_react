@@ -1,12 +1,12 @@
 import React from "react";
-import { Button, Card, Row, Col } from "antd";
+import { Button, Card, Col, Row } from "antd";
 import styled from "@emotion/styled";
 import logo from "assets/logo.svg";
 import { useDocumentTitle } from "utils";
 import { Register } from "./register";
 import { Login } from "./login";
 import { Forget } from "./forget";
-import { Routes, Route, Navigate } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 
 export const UnauthenticatedApp = () => {
   useDocumentTitle("请登录注册以继续");

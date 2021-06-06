@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 import * as auth from "auth-provider";
+import { ActivateForm, localStorageKey, LoginForm } from "auth-provider";
 import { http } from "utils/http";
 import { useMount } from "utils";
 import { useAsync } from "utils/use-async";
 import { FullPageErrorFallback, FullPageLoading } from "components/lib";
 import { User } from "types/user";
 import { useQueryClient } from "react-query";
-import { localStorageKey, LoginForm, ActivateForm } from "auth-provider";
 
 const bootstrapUser = async () => {
   let user = null;

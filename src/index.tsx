@@ -16,3 +16,6 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+//todo 路由参数非法页面
+//路由组件传id改为传实体

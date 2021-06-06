@@ -3,8 +3,16 @@ import { Contest } from "./contest";
 import { Group } from "./group";
 
 export type UserType = "STUDENT" | "TEACHER" | "ADMIN";
+export const UserTypes: UserType[] = ["STUDENT", "TEACHER", "ADMIN"];
 export type UserStatus = "UNACTIVE" | "ACTIVE" | "BANNED" | "DELETE";
+export const UserStatuses: UserStatus[] = [
+  "UNACTIVE",
+  "ACTIVE",
+  "BANNED",
+  "DELETE",
+];
 export type UserGender = "MALE" | "FEMALE" | "SECRECY";
+export const UserGenders: UserGender[] = ["MALE", "FEMALE", "SECRECY"];
 
 export const getUserTypeInfo = (type: UserType) => {
   switch (type) {

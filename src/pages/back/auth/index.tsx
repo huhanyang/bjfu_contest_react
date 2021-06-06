@@ -7,28 +7,45 @@ import { useAuth } from "../../../context/auth-context";
 import { StudentSider } from "./student-sider";
 import { TeacherSider } from "./teacher-sider";
 import { AdminSider } from "./admin-sider";
-import { generatePath } from "react-router";
+import { generatePath, useNavigate } from "react-router";
 import { AuthRoutes } from "./auth-routes";
 
 export const AuthenticatedApp = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { logout, user } = useAuth();
+  const navigate = useNavigate();
 
   const menu = (
     <Menu>
-      <Menu.Item>
-        <Link to={"/notify"}>通知列表</Link>
+      <Menu.Item key="notify">
+        <Button
+          type="link"
+          onClick={() => {
+            navigate(
+              generatePath("/back/notify", { account: String(user?.account) }),
+              { replace: true }
+            );
+          }}
+        >
+          通知列表
+        </Button>
       </Menu.Item>
-      <Menu.Item>
-        <Link
-          to={generatePath("/back/user/info/:userId", {
-            userId: String(user?.id),
-          })}
+      <Menu.Item key="user-info">
+        <Button
+          type="link"
+          onClick={() => {
+            navigate(
+              generatePath("/back/user/info/:userId", {
+                userId: String(user?.id),
+              }),
+              { replace: true }
+            );
+          }}
         >
           个人信息
-        </Link>
+        </Button>
       </Menu.Item>
-      <Menu.Item>
+      <Menu.Item key="logout">
         <Button type="link" onClick={logout}>
           退出登录
         </Button>
@@ -58,21 +75,21 @@ export const AuthenticatedApp = () => {
         </AvatarDiv>
       </Header>
       <Layout>
-        {user?.type === "STUDENT" ? (
-          <StudentSider collapsed={collapsed} setCollapsed={setCollapsed} />
-        ) : (
-          <></>
-        )}
-        {user?.type === "TEACHER" ? (
-          <TeacherSider collapsed={collapsed} setCollapsed={setCollapsed} />
-        ) : (
-          <></>
-        )}
-        {user?.type === "ADMIN" ? (
-          <AdminSider collapsed={collapsed} setCollapsed={setCollapsed} />
-        ) : (
-          <></>
-        )}
+        <Layout.Sider
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+          breakpoint="md"
+          collapsedWidth="0"
+          width={200}
+          onBreakpoint={(broken) => {
+            setCollapsed(broken);
+          }}
+        >
+          {user?.type === "STUDENT" ? <StudentSider /> : <></>}
+          {user?.type === "TEACHER" ? <TeacherSider /> : <></>}
+          {user?.type === "ADMIN" ? <AdminSider /> : <></>}
+        </Layout.Sider>
         <Layout>
           <Content>
             <AuthRoutes />

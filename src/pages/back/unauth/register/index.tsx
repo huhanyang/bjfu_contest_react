@@ -2,7 +2,7 @@ import React from "react";
 import { Divider } from "antd";
 import { CardTitle } from "../index";
 import { Link } from "react-router-dom";
-import { Routes, Route, Navigate } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 
 import { RegisterSubmit } from "./submit";
 import { RegisterSuccess } from "./success";
