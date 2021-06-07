@@ -11,6 +11,14 @@ export type ContestStatus =
   | "FINISH"
   | "DELETE";
 
+export const ContestStatuses: ContestStatus[] = [
+  "CREATING",
+  "REGISTERING",
+  "RUNNING",
+  "FINISH",
+  "DELETE",
+];
+
 export const getContestStatusInfo = (status: ContestStatus) => {
   switch (status) {
     case "CREATING":

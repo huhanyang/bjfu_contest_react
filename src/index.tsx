@@ -18,4 +18,5 @@ ReactDOM.render(
 );
 
 //todo 路由参数非法页面
-//路由组件传id改为传实体
+//todo 路由组件传id改为传实体
+//todo react query 不设置入参

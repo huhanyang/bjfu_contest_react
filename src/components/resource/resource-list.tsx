@@ -7,7 +7,8 @@ import {
 import { Resource, ResourceType } from "../../types/resource";
 import { Button, message, Popconfirm, Table } from "antd";
 import { UserPopover } from "../user-popover";
-import React from "react";
+import React, { useState } from "react";
+import { AddResourceModal } from "./add-resource-modal";
 
 export const ResourceList = () => {
   const { type, targetId } = useParams();
@@ -23,16 +24,11 @@ export const ResourceList = () => {
     mutateAsync: getDownloadInfo,
     isLoading: isDownloadInfoLoading,
   } = useGetResourceDownloadInfo();
+  const [addResourceModalVisible, setAddResourceModalVisible] = useState(false);
 
   const downloadFileHandler = async (resourceId: number) => {
     try {
-      await getDownloadInfo({ resourceId }).then((downLoadInfo) => {
-        //todo 解决OSS下文件跨域问题 对url修改
-        const link = document.createElement("a");
-        link.href = downLoadInfo.url;
-        link.download = downLoadInfo.fileName;
-        link.click();
-      });
+      await getDownloadInfo({ resourceId });
     } catch (e) {
       message.error(e.message);
     }
@@ -48,6 +44,13 @@ export const ResourceList = () => {
 
   return (
     <>
+      <Button
+        onClick={() => {
+          setAddResourceModalVisible(true);
+        }}
+      >
+        上传文件
+      </Button>
       <Table<Resource>
         dataSource={resources}
         rowKey="id"
@@ -106,6 +109,12 @@ export const ResourceList = () => {
           }}
         />
       </Table>
+      <AddResourceModal
+        targetId={Number(targetId)}
+        type={type as ResourceType}
+        visible={addResourceModalVisible}
+        setVisible={setAddResourceModalVisible}
+      />
     </>
   );
 };

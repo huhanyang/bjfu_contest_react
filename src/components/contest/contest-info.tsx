@@ -16,7 +16,7 @@ import { EditContestModal } from "./edit-contest-modal";
 import { ProcessList } from "../process/process-list";
 import { UserListRegistered } from "../user/user-list-registered";
 import { GroupListByContest } from "../group/group-list-by-contest";
-import { ContestAddResourceModal } from "./contest-add-resource-modal";
+import { AddResourceModal } from "../resource/add-resource-modal";
 
 export const ContestInfo = ({ contestId }: { contestId: number }) => {
   const { user } = useAuth();
@@ -209,8 +209,9 @@ export const ContestInfo = ({ contestId }: { contestId: number }) => {
       )}
       {contest?.creator.id === user?.id ||
       contest?.teachers?.filter((teacher) => user?.id === teacher.id).length ? (
-        <ContestAddResourceModal
-          contestId={contestId}
+        <AddResourceModal
+          targetId={contestId}
+          type={"CONTEST"}
           visible={addResourceModalVisible}
           setVisible={setAddResourceModalVisible}
         />

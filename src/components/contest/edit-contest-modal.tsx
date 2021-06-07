@@ -6,6 +6,7 @@ import {
 } from "../../utils/contest";
 import { Form, Input, InputNumber, message, Modal, Select } from "antd";
 import { LongButton } from "../../pages/back/unauth";
+import { ContestStatuses, getContestStatusInfo } from "../../types/contest";
 
 export const EditContestModal = ({
   contestId,
@@ -59,10 +60,16 @@ export const EditContestModal = ({
           rules={[{ required: true, message: "请选择竞赛状态" }]}
         >
           <Select>
-            <Select.Option value="CREATING">创建中</Select.Option>
-            <Select.Option value="REGISTERING">报名中</Select.Option>
-            <Select.Option value="RUNNING">进程中</Select.Option>
-            <Select.Option value="FINISH">竞赛结束</Select.Option>
+            {ContestStatuses.map((status) => {
+              if (status === "DELETE") {
+                return <></>;
+              }
+              return (
+                <Select.Option value={status}>
+                  {getContestStatusInfo(status)}
+                </Select.Option>
+              );
+            })}
           </Select>
         </Form.Item>
         <Form.Item

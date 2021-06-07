@@ -109,13 +109,18 @@ export const useGroupKickMember = (contestId?: number) => {
   );
 };
 
-export const useTeacherJoinGroup = (contestId?: number) => {
+export interface TeacherJoinGroupRequest {
+  contestId: number;
+  groupId: number;
+}
+
+export const useTeacherJoinGroup = () => {
   const client = useHttp();
   return useMutation(
-    (params: { groupId: number }) =>
+    (params: TeacherJoinGroupRequest) =>
       client(`contest/teacher/joinGroup`, {
         method: "POST",
-        data: { ...params, contestId },
+        data: params,
       }),
     useNoOpsConfig(["contest"])
   );

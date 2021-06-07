@@ -5,6 +5,7 @@ import { User } from "../types/user";
 import { PageAndSingleFieldSorterRequest } from "../types/request";
 import { Contest, ContestStatus } from "../types/contest";
 import { cleanObject } from "./index";
+import { Page } from "../types/page";
 
 export const useAllTeachers = (contestId: number) => {
   const client = useHttp();
@@ -56,13 +57,13 @@ export const useAllTeachContests = (
   params?: Partial<TeacherListAllTeachContest>
 ) => {
   const client = useHttp();
-  return useQuery<Contest[]>(
+  return useQuery<Page<Contest>>(
     ["contest", "teacher", "all-teach-contests", cleanObject(params)],
     () =>
       client(`contest/teacher/listAllTeachContests`, {
         data: params,
         method: "post",
-      }).then((value) => value.content)
+      })
   );
 };
 

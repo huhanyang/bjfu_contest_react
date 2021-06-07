@@ -15,6 +15,9 @@ import { ContestPopover } from "../contest-popover";
 import { UserPopover } from "../user-popover";
 import { ProcessPopover } from "../process-popover";
 import { EditGroupModal } from "./edit-group-modal";
+import { AddResourceModal } from "../resource/add-resource-modal";
+import { Link } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router";
 
 export const GroupInfo = ({
   contestId,
@@ -26,7 +29,12 @@ export const GroupInfo = ({
   const { user } = useAuth();
 
   const { data: groupInfo } = useGroup(groupId);
+  const navigate = useNavigate();
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
+  const [
+    addResourceModalVisible,
+    setAddResourceModalVisible,
+  ] = useState<boolean>(false);
   const {
     mutateAsync: deleteGroup,
     isLoading: isDeleteGroupLoading,
@@ -48,7 +56,7 @@ export const GroupInfo = ({
   const {
     mutateAsync: teacherJoinGroup,
     isLoading: isTeacherJoinGroupLoading,
-  } = useTeacherJoinGroup(Number(groupInfo?.contest.id));
+  } = useTeacherJoinGroup();
   const {
     mutateAsync: teacherQuitGroup,
     isLoading: isTeacherQuitGroupLoading,
@@ -72,7 +80,7 @@ export const GroupInfo = ({
 
   const teacherJoinGroupRequest = async () => {
     try {
-      await teacherJoinGroup({ groupId });
+      await teacherJoinGroup({ contestId, groupId });
     } catch (e) {
       message.error(e.message);
     }
@@ -86,9 +94,37 @@ export const GroupInfo = ({
     }
   };
 
+  const FileOperates = () => {
+    return (
+      <>
+        <Button
+          onClick={() => {
+            setAddResourceModalVisible(true);
+          }}
+        >
+          上传文件
+        </Button>
+        <Button
+          onClick={() => {
+            navigate(
+              generatePath("/back/resource/list/:type/:targetId", {
+                type: "GROUP",
+                targetId: String(contestId),
+              }),
+              { replace: true }
+            );
+          }}
+        >
+          文件列表
+        </Button>
+      </>
+    );
+  };
+
   const GroupCaptainOperates = () => {
     return (
       <>
+        <FileOperates />
         <Button
           onClick={() => {
             setIsEditModalVisible(true);
@@ -115,12 +151,15 @@ export const GroupInfo = ({
   const ContestTeacherOperates = () => {
     if (groupInfo?.teacher?.id === user?.id) {
       return (
-        <Button
-          loading={isTeacherQuitGroupLoading}
-          onClick={teacherQuitGroupRequest}
-        >
-          退出指导
-        </Button>
+        <>
+          <Button
+            loading={isTeacherQuitGroupLoading}
+            onClick={teacherQuitGroupRequest}
+          >
+            退出指导
+          </Button>
+          <FileOperates />
+        </>
       );
     }
     return (
@@ -136,20 +175,22 @@ export const GroupInfo = ({
   const ContestRegisterOperates = () => {
     if (groupInfo?.members?.filter((member) => member.id === user?.id).length) {
       return (
-        <Button
-          onClick={async () => {
-            try {
-              await kickMember({
-                groupId,
-                userAccount: String(user?.account),
-              });
-            } catch (e) {
-              message.error(e.message);
-            }
-          }}
-        >
-          退出队伍
-        </Button>
+        <>
+          <Button
+            onClick={async () => {
+              try {
+                await kickMember({
+                  groupId,
+                  userAccount: String(user?.account),
+                });
+              } catch (e) {
+                message.error(e.message);
+              }
+            }}
+          >
+            退出队伍
+          </Button>
+        </>
       );
     } else if (
       Number(groupInfo?.contest?.groupMemberCount) >
@@ -309,6 +350,12 @@ export const GroupInfo = ({
         groupId={groupId}
         visible={isEditModalVisible}
         setVisible={setIsEditModalVisible}
+      />
+      <AddResourceModal
+        targetId={groupId}
+        type={"GROUP"}
+        visible={addResourceModalVisible}
+        setVisible={setAddResourceModalVisible}
       />
     </>
   );

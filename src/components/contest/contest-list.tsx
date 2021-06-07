@@ -121,7 +121,12 @@ export const ContestList = () => {
   return (
     <>
       <Table<Contest>
-        dataSource={contests}
+        dataSource={contests?.content}
+        pagination={{
+          ...requestParams.pagination,
+          total: contests?.totalElements,
+          showSizeChanger: true,
+        }}
         rowKey="id"
         onChange={handleTableChange}
         bordered

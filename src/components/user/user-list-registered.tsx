@@ -186,7 +186,12 @@ export const UserListRegistered = ({
   return (
     <>
       <Table<ContestRegister>
-        dataSource={registers}
+        dataSource={registers?.content}
+        pagination={{
+          ...requestParams.pagination,
+          total: registers?.totalElements,
+          showSizeChanger: true,
+        }}
         rowKey="id"
         onChange={handleTableChange}
         bordered

@@ -7,6 +7,7 @@ import {
   ContestRegister,
   ContestRegisterStatus,
 } from "../types/contest-register";
+import { Page } from "../types/page";
 
 export const useRegister = (contestId?: number) => {
   const client = useHttp();
@@ -29,13 +30,13 @@ export interface RegisterListAllRequest
 
 export const useAllRegisters = (params: Partial<RegisterListAllRequest>) => {
   const client = useHttp();
-  return useQuery<ContestRegister[]>(
+  return useQuery<Page<ContestRegister>>(
     ["register", "all-registers", cleanObject(params)],
     () =>
       client(`contest/register/listAll`, {
         data: params,
         method: "POST",
-      }).then((value) => value.content),
+      }),
     {
       enabled: Boolean(params),
     }

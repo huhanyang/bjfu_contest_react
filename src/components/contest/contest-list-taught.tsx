@@ -12,7 +12,11 @@ import {
   TableCurrentDataSource,
   TablePaginationConfig,
 } from "antd/lib/table/interface";
-import { Contest } from "../../types/contest";
+import {
+  Contest,
+  ContestStatuses,
+  getContestStatusInfo,
+} from "../../types/contest";
 import { SingleFieldSorter } from "../../types/request";
 import {
   Button,
@@ -141,7 +145,12 @@ export const ContestListTaught = () => {
   return (
     <>
       <Table<Contest>
-        dataSource={contests}
+        dataSource={contests?.content}
+        pagination={{
+          ...requestParams.pagination,
+          total: contests?.totalElements,
+          showSizeChanger: true,
+        }}
         rowKey="id"
         onChange={handleTableChange}
         bordered
@@ -164,12 +173,10 @@ export const ContestListTaught = () => {
           title="竞赛状态"
           dataIndex={"status"}
           key="status"
-          filters={[
-            { text: "创建中", value: "CREATING" },
-            { text: "报名中", value: "REGISTERING" },
-            { text: "进程中", value: "RUNNING" },
-            { text: "结束", value: "FINISH" },
-          ]}
+          render={(text, record) => getContestStatusInfo(record.status)}
+          filters={ContestStatuses.map((status) => {
+            return { text: getContestStatusInfo(status), value: status };
+          })}
         />
         <Table.Column<Contest>
           title="竞赛创建时间"

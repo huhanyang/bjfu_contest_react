@@ -2,8 +2,7 @@ import { useContest } from "../../utils/contest";
 import React, { useState } from "react";
 import { useDeleteTeacher } from "../../utils/teacher";
 import { Button, Dropdown, Menu, message } from "antd";
-import { Link } from "react-router-dom";
-import { generatePath } from "react-router";
+import { generatePath, useNavigate } from "react-router";
 import { ContestSelectTeacherModal } from "./contest-select-teacher-modal";
 
 export const ContestTeacherMenus = ({
@@ -20,6 +19,7 @@ export const ContestTeacherMenus = ({
     mutateAsync: deleteTeacher,
     isLoading: isDeleteTeacherLoading,
   } = useDeleteTeacher(contestId);
+  const navigate = useNavigate();
 
   const menu = (
     <Menu>
@@ -30,13 +30,19 @@ export const ContestTeacherMenus = ({
               title={`${teacher.college} ${teacher.major} ${teacher.name}`}
             >
               <Menu.Item>
-                <Link
-                  to={generatePath("/back/user/info/:userId", {
-                    userId: String(teacher.id),
-                  })}
+                <Button
+                  type="link"
+                  onClick={() => {
+                    navigate(
+                      generatePath("/back/user/info/:userId", {
+                        userId: String(teacher.id),
+                      }),
+                      { replace: true }
+                    );
+                  }}
                 >
                   查看信息
-                </Link>
+                </Button>
               </Menu.Item>
               {isCreator ? (
                 <Menu.Item>

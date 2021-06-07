@@ -4,6 +4,7 @@ import { useNoOpsConfig } from "utils/use-optimistic-options";
 import { PageAndSingleFieldSorterRequest } from "../types/request";
 import { Contest, ContestStatus } from "../types/contest";
 import { cleanObject } from "./index";
+import { Page } from "../types/page";
 
 export const useContest = (id?: number) => {
   const client = useHttp();
@@ -31,12 +32,9 @@ export const useCreatedContests = (
   params: Partial<ContestListCreatedRequest>
 ) => {
   const client = useHttp();
-  return useQuery<Contest[]>(
+  return useQuery<Page<Contest>>(
     ["contest", "created-contests", cleanObject(params)],
-    () =>
-      client("contest/listCreated", { data: params, method: "POST" }).then(
-        (value) => value.content
-      )
+    () => client("contest/listCreated", { data: params, method: "POST" })
   );
 };
 
@@ -49,12 +47,9 @@ export interface ContestListAllRequest extends PageAndSingleFieldSorterRequest {
 
 export const useAllContests = (params: Partial<ContestListAllRequest>) => {
   const client = useHttp();
-  return useQuery<Contest[]>(
+  return useQuery<Page<Contest>>(
     ["contest", "all-contests", cleanObject(params)],
-    () =>
-      client("contest/listAll", { data: params, method: "POST" }).then(
-        (value) => value.content
-      )
+    () => client("contest/listAll", { data: params, method: "POST" })
   );
 };
 

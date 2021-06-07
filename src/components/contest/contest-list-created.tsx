@@ -54,7 +54,12 @@ export const ContestListCreated = () => {
   return (
     <>
       <Table<Contest>
-        dataSource={createdContests}
+        dataSource={createdContests?.content}
+        pagination={{
+          ...requestParams.pagination,
+          total: createdContests?.totalElements,
+          showSizeChanger: true,
+        }}
         rowKey="id"
         onChange={handleTableChange}
         bordered

@@ -3,9 +3,11 @@ import { useMutation, useQuery } from "react-query";
 import { useNoOpsConfig } from "utils/use-optimistic-options";
 import {
   Resource,
+  ResourceContentType,
   ResourceDownloadInfo,
   ResourceType,
 } from "../types/resource";
+import { message } from "antd";
 
 export const useResources = (type: ResourceType, targetId: number) => {
   const client = useHttp();
@@ -27,7 +29,7 @@ export interface ResourceEditRequest {
 export const useEditResource = () => {
   const client = useHttp();
   return useMutation(
-    (params: Partial<ResourceEditRequest>) =>
+    (params: ResourceEditRequest) =>
       client(`resource/edit`, {
         method: "POST",
         data: params,
@@ -48,23 +50,26 @@ export const useDeleteResource = () => {
   );
 };
 
-export interface ResourceAddInContestRequest {
-  contestId: number;
+export interface ResourceAddRequest {
+  targetId: number;
+  type: ResourceType;
+  contentType: ResourceContentType;
   fileName: string;
   classification: string;
-  file: any;
+  file: File;
 }
 
-export const useAddResourceInContest = () => {
+export const useAddResource = () => {
   const client = useHttp();
-  return useMutation((params: Partial<ResourceAddInContestRequest>) => {
+  return useMutation((params: ResourceAddRequest) => {
     const formData = new FormData();
-    formData.append("contestId", String(params.contestId));
-    formData.append("fileName", String(params.fileName));
-    formData.append("classification", String(params.classification));
-    // @ts-ignore
+    formData.append("targetId", String(params.targetId));
+    formData.append("type", params.type);
+    formData.append("contentType", params.contentType);
+    formData.append("fileName", params.fileName);
+    formData.append("classification", params.classification);
     formData.append("file", params.file);
-    return client(`contest/addResource`, {
+    return client(`resource/upload`, {
       method: "POST",
       data: formData,
       isFile: true,
@@ -72,13 +77,30 @@ export const useAddResourceInContest = () => {
   }, useNoOpsConfig(["resource"]));
 };
 
+const appUrl = process.env.REACT_APP_URL;
+const ossUrl = process.env.REACT_APP_OSS_URL;
+
 export const useGetResourceDownloadInfo = () => {
   const client = useHttp();
   return useMutation(
     (params: { resourceId: number }) =>
       client(`resource/getDownloadInfo`, {
         data: params,
-      }).then((downLoadInfo: ResourceDownloadInfo) => downLoadInfo),
+      }).then((downLoadInfo: ResourceDownloadInfo) => {
+        if (downLoadInfo.url) {
+          const link = document.createElement("a");
+          if (appUrl && ossUrl) {
+            link.href = downLoadInfo.url.replace(ossUrl, appUrl);
+          } else {
+            link.href = downLoadInfo.url;
+          }
+          link.download = downLoadInfo.fileName;
+          link.click();
+        } else {
+          message.error("文件下载失败！");
+          console.error("getApplyJobDownloadFileInfo not return url!");
+        }
+      }),
     useNoOpsConfig(["resource"])
   );
 };

@@ -1,31 +1,44 @@
 import React, { useState } from "react";
-import {
-  ResourceAddInContestRequest,
-  useAddResourceInContest,
-} from "../../utils/resource";
 import { RcFile } from "antd/lib/upload/interface";
 import { Button, Form, Input, message, Modal, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { LongButton } from "../../pages/back/unauth";
+import { ResourceAddRequest, useAddResource } from "../../utils/resource";
+import { ResourceType } from "../../types/resource";
 
-export const ContestAddResourceModal = ({
-  contestId,
+export const AddResourceModal = ({
+  targetId,
+  type,
   visible,
   setVisible,
 }: {
-  contestId: number;
+  targetId: number;
+  type: ResourceType;
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const {
     mutateAsync: addResource,
     isLoading: isAddResourceLoading,
-  } = useAddResourceInContest();
+  } = useAddResource();
   const [file, setFile] = useState<RcFile>();
 
-  const handleSubmit = async (values: ResourceAddInContestRequest) => {
+  const handleSubmit = async (values: ResourceAddRequest) => {
     try {
-      await addResource({ ...values, file, contestId, fileName: file?.name });
+      if (!file) {
+        message.warn("未选取文件");
+      } else {
+        await addResource({
+          ...values,
+          file,
+          targetId,
+          fileName: file?.name,
+          type,
+          contentType: "OTHER",
+        }).then(() => {
+          setVisible(false);
+        });
+      }
     } catch (e) {
       message.error(e.message);
     }
@@ -49,11 +62,12 @@ export const ContestAddResourceModal = ({
           <Form.Item
             name={"classification"}
             label={"分类名"}
-            rules={[{ required: true, message: "请输入文件名" }]}
+            rules={[{ required: true, message: "请输入分类名" }]}
           >
             <Input type="text" maxLength={32} />
           </Form.Item>
           <Upload
+            maxCount={1}
             beforeUpload={(file) => {
               setFile(file);
               return false;
@@ -63,7 +77,8 @@ export const ContestAddResourceModal = ({
           </Upload>
           <Form.Item>
             <LongButton
-              loading={isAddResourceLoading || file === undefined}
+              disabled={file === undefined}
+              loading={isAddResourceLoading}
               htmlType={"submit"}
               type={"primary"}
             >
